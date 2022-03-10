@@ -2,7 +2,7 @@
     MODEL UNTUK ANGGOTA KELUARGA
 */
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const anggotaKeluargaSchema = new Schema(
@@ -19,12 +19,13 @@ const anggotaKeluargaSchema = new Schema(
       type: String,
       required: true,
     },
-    rt: {
-      type: Schema.Types.ObjectId,
-      ref: "RT",
-    },
+		keluargaId: {
+			type: Schema.Types.ObjectId,
+			ref: "Keluarga",
+			required: true
+		},
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("AnggotaKeluarga", anggotaKeluargaSchema);
+module.exports = mongoose.model('AnggotaKeluarga', anggotaKeluargaSchema);

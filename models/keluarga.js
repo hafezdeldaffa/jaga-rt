@@ -52,7 +52,7 @@ const keluargaSchema = new Schema(
       required: true,
     },
     anggotaKeluarga: {
-        type: Schema.Types.ObjectId,
+        type: [Schema.Types.ObjectId],
         ref: "AnggotaKeluarga",
       },
   },
