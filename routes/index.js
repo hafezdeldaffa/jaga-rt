@@ -6,4 +6,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Jaga RT' });
 });
 
+router.get('/dashboard');
+
 module.exports = router;
