@@ -50,11 +50,7 @@ const keluargaSchema = new Schema(
     tokenRT: {
       type: String,
       required: true,
-    },
-    anggotaKeluarga: {
-        type: [Schema.Types.ObjectId],
-        ref: "AnggotaKeluarga",
-      },
+    }
   },
   { timestamps: true }
 );
