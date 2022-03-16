@@ -19,11 +19,16 @@ const anggotaKeluargaSchema = new Schema(
       type: String,
       required: true,
     },
-		keluargaId: {
-			type: Schema.Types.ObjectId,
-			ref: "Keluarga",
-			required: true
-		},
+    tokenRT: {
+      type: Schema.Types.ObjectId,
+      ref: 'RT',
+      required: true,
+    },
+    keluargaId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Keluarga',
+      required: true,
+    },
   },
   { timestamps: true }
 );

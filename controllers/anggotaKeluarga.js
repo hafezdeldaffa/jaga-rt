@@ -22,11 +22,13 @@ exports.addAnggotaKeluarga = async (req, res, next) => {
 
       const keluarga = await Keluarga.findOne({ email: email });
       const keluargaId = keluarga._id;
+      const tokenRT = keluarga.tokenRT;
 
       const newAnggota = new AnggotaKeluarga({
         nama: nama,
         role: role,
         statusCovid: statusCovid,
+        tokenRT: tokenRT,
         keluargaId: keluargaId,
       });
 
