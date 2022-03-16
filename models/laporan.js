@@ -27,6 +27,11 @@ const laporanSchema = new Schema(
       type: Number,
       required: true,
     },
+    anggotaId: {
+      type: Schema.Types.ObjectId,
+      ref: 'AnggotaKeluarga',
+      required: true,
+    },
     keluargaId: {
       type: Schema.Types.ObjectId,
       ref: 'Keluarga',

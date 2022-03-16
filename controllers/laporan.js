@@ -68,6 +68,7 @@ exports.addLaporan = async (req, res, next) => {
         nama: anggota.nama,
         role: anggota.role,
         keluargaId: anggota.keluargaId._id,
+        anggotaId: anggota._id,
         alamat: anggota.keluargaId.alamat,
         nomorRumah: anggota.keluargaId.nomorRumah,
         rt: anggota.keluargaId.rt,
@@ -106,6 +107,81 @@ exports.getLaporan = async (req, res, next) => {
       const laporan = await Laporan.find({ keluargaId: keluargaId });
 
       res.json({ message: 'Laporan berhasil ditemukan', laporan });
+    }
+  } catch (error) {
+    /* Handling Errors */
+    errorHandling(error);
+    next(error);
+  }
+};
+
+exports.getLaporanById = async (req, res, next) => {
+  try {
+    /* Creating validation */
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation error, entered data is incorrect');
+      error.statusCode = 422;
+      throw err;
+    }
+
+    /* Get data from jwt */
+    const { email, role } = req.user;
+
+    if (role === 'Keluarga') {
+      const { id } = req.params;
+
+      const keluarga = await Keluarga.findOne({ email: email });
+      const keluargaId = keluarga._id;
+
+      const laporan = await Laporan.findById(id);
+
+      res.json({ message: 'Laporan By ID berhasil ditemukan', laporan });
+    }
+  } catch (error) {
+    /* Handling Errors */
+    errorHandling(error);
+    next(error);
+  }
+};
+
+exports.editLaporan = async (req, res, next) => {
+  try {
+    /* Creating validation */
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation error, entered data is incorrect');
+      error.statusCode = 422;
+      throw err;
+    }
+
+    /* Get data from jwt */
+    const { email, role } = req.user;
+
+    if (role === 'Keluarga') {
+      const { id } = req.params;
+      const { gejala, catatan } = req.body;
+
+      const laporan = await Laporan.findById(id);
+      const anggotaId = laporan.anggotaId;
+
+      const anggota = await AnggotaKeluarga.findById(anggotaId);
+
+      const newLaporan = {
+        nama: anggota.nama,
+        role: anggota.role,
+        keluargaId: anggota.keluargaId._id,
+        anggotaId: anggota._id,
+        alamat: anggota.keluargaId.alamat,
+        nomorRumah: anggota.keluargaId.nomorRumah,
+        rt: anggota.keluargaId.rt,
+        gejala: gejala,
+        catatan: catatan,
+      };
+
+      const updatedLaporan = await Laporan.findByIdAndUpdate(id, newLaporan);
+
+      res.json({ message: 'Laporan berhasil diupdate', updatedLaporan });
     }
   } catch (error) {
     /* Handling Errors */
