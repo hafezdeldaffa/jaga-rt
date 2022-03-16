@@ -6,6 +6,7 @@ const {
   getLaporan,
   getLaporanById,
   editLaporan,
+  deleteLaporan,
 } = require('../controllers/laporan');
 const router = express.Router();
 
@@ -14,6 +15,6 @@ router.get('/laporan', authenticateJWT, getLaporan);
 router.get('/laporan/:id', authenticateJWT, getLaporanById);
 router.post('/laporan/:id', authenticateJWT, addLaporan);
 router.put('/laporan/:id', authenticateJWT, editLaporan);
-router.delete('/laporan/:id');
+router.delete('/laporan/:id', authenticateJWT, deleteLaporan);
 
 module.exports = router;

@@ -189,3 +189,30 @@ exports.editLaporan = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.deleteLaporan = async (req, res, next) => {
+  try {
+    /* Creating validation */
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation error, entered data is incorrect');
+      error.statusCode = 422;
+      throw err;
+    }
+
+    /* Get data from jwt */
+    const { email, role } = req.user;
+
+    if (role === 'Keluarga') {
+      const { id } = req.params;
+
+      await Laporan.findByIdAndDelete(id);
+
+      res.json({ message: 'Berhasil menghapus laporan' });
+    }
+  } catch (error) {
+		/* Handling Errors */
+    errorHandling(error);
+    next(error);
+	}
+};
