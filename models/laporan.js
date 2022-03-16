@@ -11,6 +11,10 @@ const laporanSchema = new Schema(
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+      required: true,
+    },
     alamat: {
       type: String,
       required: true,
@@ -21,6 +25,11 @@ const laporanSchema = new Schema(
     },
     rt: {
       type: Number,
+      required: true,
+    },
+    keluargaId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Keluarga',
       required: true,
     },
     gejala: {

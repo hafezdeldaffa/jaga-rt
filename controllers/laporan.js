@@ -66,6 +66,8 @@ exports.addLaporan = async (req, res, next) => {
 
       const laporan = new Laporan({
         nama: anggota.nama,
+        role: anggota.role,
+        keluargaId: anggota.keluargaId._id,
         alamat: anggota.keluargaId.alamat,
         nomorRumah: anggota.keluargaId.nomorRumah,
         rt: anggota.keluargaId.rt,
@@ -76,6 +78,34 @@ exports.addLaporan = async (req, res, next) => {
       const newLaporan = await laporan.save();
 
       res.json({ message: 'Laporan berhasil ditambahkan', newLaporan });
+    }
+  } catch (error) {
+    /* Handling Errors */
+    errorHandling(error);
+    next(error);
+  }
+};
+
+exports.getLaporan = async (req, res, next) => {
+  try {
+    /* Creating validation */
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation error, entered data is incorrect');
+      error.statusCode = 422;
+      throw err;
+    }
+
+    /* Get data from jwt */
+    const { email, role } = req.user;
+
+    if (role === 'Keluarga') {
+      const keluarga = await Keluarga.findOne({ email: email });
+      const keluargaId = keluarga._id;
+
+      const laporan = await Laporan.find({ keluargaId: keluargaId });
+
+      res.json({ message: 'Laporan berhasil ditemukan', laporan });
     }
   } catch (error) {
     /* Handling Errors */
