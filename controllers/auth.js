@@ -135,9 +135,7 @@ exports.login = async (req, res, next) => {
         { expiresIn: '3h' }
       );
 
-      res
-        .status(200)
-        .json({ message: 'Login Keluarga Berhasil', token: token });
+      res.render('index', { token: token });
     } else {
       const rt = await Rt.findOne({ email: email });
 
@@ -166,7 +164,7 @@ exports.login = async (req, res, next) => {
         { expiresIn: '3h' }
       );
 
-      res.status(200).json({ message: 'Login RT Berhasil', token: token });
+      res.render('index', { token: token });
     }
   } catch (error) {
     errorHandling(error);
