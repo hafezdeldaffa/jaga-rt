@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login to Jaga-RT</title>
+    <title>Sign Up to Jaga-RT</title>
 
     <!--====== Favicon Icon ======-->
     <link
@@ -47,7 +47,7 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="ud-banner-content">
-              <h1>Halaman Login</h1>
+              <h1>Halaman Daftar</h1>
             </div>
           </div>
         </div>
@@ -66,7 +66,17 @@
               </div>
               <form class="ud-login-form" method="post" action="login">
                 <div class="ud-form-group">
+                  <input
+                    type="text"
+                    name="namaKepalaKeluarga"
+                    placeholder="Nama Kepala Keluarga"
+                  />
+                </div>
+                <div class="ud-form-group">
                   <input type="email" name="email" placeholder="Email" />
+                </div>
+                <div>
+                  <input type="text" name="provinsi" placeholder="Provinsi" />
                 </div>
                 <div class="ud-form-group">
                   <input
@@ -85,13 +95,11 @@
                   </select>
                 </div>
                 <div class="ud-form-group">
-                  <button type="submit" class="ud-main-btn w-100">Masuk</button>
+                  <button type="submit" class="ud-main-btn w-100">
+                    Daftar
+                  </button>
                 </div>
               </form>
-
-              <p class="signup-option">
-                Belum punya akun? <a href="/daftar"> Daftar </a>
-              </p>
             </div>
           </div>
         </div>
