@@ -9,6 +9,9 @@ const bcrypt = require('bcrypt');
 const Keluarga = require('../models/keluarga');
 const Rt = require('../models/rt');
 const { errorHandling } = require('./errorHandling');
+const util = require('./util');
+
+let logout = false;
 
 exports.authenticateJWT = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -134,8 +137,9 @@ exports.login = async (req, res, next) => {
         process.env.SECRET_KEY,
         { expiresIn: '3h' }
       );
-
-      res.render('index', { token: token });
+  
+      res.cookie('token', token, {maxAge: 1000 * 60 * 60 * 60}).render('dashboard/dashboard', { token, cookie: req.cookies.token });
+      
     } else {
       const rt = await Rt.findOne({ email: email });
 
@@ -164,10 +168,35 @@ exports.login = async (req, res, next) => {
         { expiresIn: '3h' }
       );
 
-      res.render('index', { token: token });
+      res.cookie('token', token, {maxAge: 1000 * 60 * 60 * 60}).render('dashboard/dashboard', { token: token, cookie: req.cookies.token });
     }
   } catch (error) {
     errorHandling(error);
     next(error);
   }
 };
+
+exports.logout = async (req, res, next) => {
+  res.cookie('token', false, {maxAge: 1});
+  res.render('index')
+}
+
+exports.checkUser = (req, res, next) => {
+  const token = req.cookies.token;
+
+  if(token) {
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+      if (err) {
+        res.user = null;
+        next();
+      } else {
+        let keluarga = await Keluarga.findOne({email: decodedToken.email});
+        res.user = keluarga;
+        next();
+      }
+    })
+  } else {
+    res.user = null;
+    next();
+  }
+}

@@ -1,5 +1,5 @@
 const express = require('express');
-const { signUp, login } = require('../controllers/auth');
+const { signUp, login, authenticateJWT, logout, checkUser } = require('../controllers/auth');
 const router = express.Router();
 const { body } = require('express-validator');
 const Keluarga = require('../models/keluarga');
@@ -37,6 +37,8 @@ router.post(
   signUp
 );
 
-router.post('/login', login);
+router.post('/dashboard', checkUser, login);
+
+router.get('/logout', logout);
 
 module.exports = router;
