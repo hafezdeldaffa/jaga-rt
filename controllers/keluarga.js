@@ -18,37 +18,43 @@ exports.getDashboard = async (req, res, next) => {
 
     console.log(decodedToken);
 
-    if (decodedToken.role === 'Keluarga') {
-      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-      const anggotaPositif = await AnggotaKeluarga.find({
-        tokenRT: keluarga.tokenRT,
-        statusCovid: 'Positif',
-      });
+    if (!decodedToken) {
+      res.render('index');
+    } else {
+      if (decodedToken.role === 'Keluarga') {
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+        const anggotaPositif = await AnggotaKeluarga.find({
+          tokenRT: keluarga.tokenRT,
+          statusCovid: 'Positif',
+          jwt: token,
+        });
 
-      res.render('dashboard/dashboard', {
-        title: 'Dashboard Jaga-RT',
-        keluarga,
-        anggotaPositif,
-      });
-      /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-          res.user = keluarga;
-          next(); */
-    }
+        res.render('dashboard/dashboard', {
+          title: 'Dashboard Jaga-RT',
+          keluarga,
+          anggotaPositif,
+        });
+        /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+            res.user = keluarga;
+            next(); */
+      }
 
-    if (decodedToken.role === 'RT') {
-      const keluarga = await Rt.findOne({ email: decodedToken.email });
-      const anggotaPositif = await AnggotaKeluarga.find({
-        tokenRT: keluarga._id,
-        statusCovid: 'Positif',
-      });
+      if (decodedToken.role === 'RT') {
+        const keluarga = await Rt.findOne({ email: decodedToken.email });
+        const anggotaPositif = await AnggotaKeluarga.find({
+          tokenRT: keluarga._id,
+          statusCovid: 'Positif',
+          jwt: token,
+        });
 
-      console.log(keluarga);
+        console.log(keluarga);
 
-      res.render('dashboard/dashboard', {
-        title: 'Dashboard Jaga-RT',
-        keluarga,
-        anggotaPositif,
-      });
+        res.render('dashboard/dashboard', {
+          title: 'Dashboard Jaga-RT',
+          keluarga,
+          anggotaPositif,
+        });
+      }
     }
 
     res.render('index');
