@@ -10,8 +10,8 @@ const Keluarga = require('../models/keluarga');
 const Rt = require('../models/rt');
 const { errorHandling } = require('./errorHandling');
 const util = require('./util');
-
-let logout = false;
+const LocalStorage = require('node-localstorage').LocalStorage;
+const localStorage = new LocalStorage('./scratch');
 
 exports.authenticateJWT = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -137,9 +137,17 @@ exports.login = async (req, res, next) => {
         process.env.SECRET_KEY,
         { expiresIn: '3h' }
       );
-  
-      res.cookie('token', token, {maxAge: 1000 * 60 * 60 * 60}).render('dashboard/dashboard', { token, cookie: req.cookies.token });
-      
+
+      localStorage.setItem('token', token);
+
+      const fixedToken = localStorage.getItem('token');
+      console.log(fixedToken);
+
+      if (fixedToken) {
+        res.redirect('/dashboard');
+      }
+
+      next();
     } else {
       const rt = await Rt.findOne({ email: email });
 
@@ -168,7 +176,12 @@ exports.login = async (req, res, next) => {
         { expiresIn: '3h' }
       );
 
-      res.cookie('token', token, {maxAge: 1000 * 60 * 60 * 60}).render('dashboard/dashboard', { token: token, cookie: req.cookies.token });
+      res
+        .cookie('token', token, { maxAge: 1000 * 60 * 60 * 60 })
+        .render('dashboard/dashboard', {
+          token: token,
+          cookie: req.cookies.token,
+        });
     }
   } catch (error) {
     errorHandling(error);
@@ -177,26 +190,28 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = async (req, res, next) => {
-  res.cookie('token', false, {maxAge: 1});
-  res.render('index')
-}
+  localStorage.removeItem('token');
+  res.redirect('/');
+};
 
 exports.checkUser = (req, res, next) => {
-  const token = req.cookies.token;
+  const token = localStorage.getItem('token');
 
-  if(token) {
+  if (token) {
     jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
       if (err) {
         res.user = null;
         next();
+      } else if (decodedToken.role === 'RT') {
+        res.rt = decodedToken;
+        next();
       } else {
-        let keluarga = await Keluarga.findOne({email: decodedToken.email});
-        res.user = keluarga;
+        res.keluarga = decodedToken;
         next();
       }
-    })
+    });
   } else {
     res.user = null;
     next();
   }
-}
+};
