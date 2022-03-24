@@ -176,12 +176,16 @@ exports.login = async (req, res, next) => {
         { expiresIn: '3h' }
       );
 
-      res
-        .cookie('token', token, { maxAge: 1000 * 60 * 60 * 60 })
-        .render('dashboard/dashboard', {
-          token: token,
-          cookie: req.cookies.token,
-        });
+      localStorage.setItem('token', token);
+
+      const fixedToken = localStorage.getItem('token');
+      console.log(fixedToken);
+
+      if (fixedToken) {
+        res.redirect('/dashboard');
+      }
+
+      next();
     }
   } catch (error) {
     errorHandling(error);

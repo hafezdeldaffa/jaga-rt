@@ -1,4 +1,6 @@
 const Keluarga = require('../models/keluarga');
+const AnggotaKeluarga = require('../models/anggotaKeluarga');
+const Rt = require('../models/rt');
 const { errorHandling } = require('./errorHandling');
 const { validationResult } = require('express-validator');
 const LocalStorage = require('node-localstorage').LocalStorage;
@@ -12,14 +14,41 @@ exports.getDashboard = async (req, res, next) => {
   jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
     if (err) {
       errorHandling(err);
-    } else {
+    }
+
+    console.log(decodedToken);
+
+    if (decodedToken.role === 'Keluarga') {
+      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+      const anggotaPositif = await AnggotaKeluarga.find({
+        tokenRT: keluarga.tokenRT,
+        statusCovid: 'Positif',
+      });
+
       res.render('dashboard/dashboard', {
         title: 'Dashboard Jaga-RT',
-        keluarga: decodedToken,
+        keluarga,
+        anggotaPositif,
       });
-      /* let keluarga = await Keluarga.findOne({ email: decodedToken.email });
+      /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
           res.user = keluarga;
           next(); */
+    }
+
+    if (decodedToken.role === 'RT') {
+      const keluarga = await Rt.findOne({ email: decodedToken.email });
+      const anggotaPositif = await AnggotaKeluarga.find({
+        tokenRT: keluarga._id,
+        statusCovid: 'Positif',
+      });
+
+      console.log(keluarga);
+
+      res.render('dashboard/dashboard', {
+        title: 'Dashboard Jaga-RT',
+        keluarga,
+        anggotaPositif,
+      });
     }
 
     res.render('index');
