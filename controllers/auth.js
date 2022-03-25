@@ -76,9 +76,7 @@ exports.signUp = async (req, res, next) => {
 
       const findKeluarga = Keluarga.findOne({ email: keluarga.email });
 
-      res
-        .status(201)
-        .json({ message: 'Akun Keluarga Dibuat', id: findKeluarga._id });
+      res.status(201).redirect('/login');
     } else {
       const dataRt = new Rt({
         namaKepalaKeluarga: namaKepalaKeluarga,
@@ -97,7 +95,7 @@ exports.signUp = async (req, res, next) => {
 
       const findRt = Rt.findOne({ email: dataRt.email });
 
-      res.status(201).json({ message: 'Akun RT Dibuat', id: findRt._id });
+      res.status(201).redirect('/login');
     }
   } catch (error) {
     errorHandling(error);
