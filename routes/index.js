@@ -1,11 +1,7 @@
 const express = require('express');
-const { authenticateJWT, checkUser } = require('../controllers/auth');
 const { getDashboard } = require('../controllers/keluarga');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const LocalStorage = require('node-localstorage').LocalStorage;
-const localstorage = new LocalStorage('./scratch');
-const Keluarga = require('../models/keluarga');
+const { pieChart, dailyData } = require('../controllers/covidData');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -21,5 +17,8 @@ router.get('/signup', function (req, res, next) {
 });
 
 router.get('/dashboard', getDashboard);
+
+router.get('/piechartData', pieChart);
+router.get('/dailyData', dailyData);
 
 module.exports = router;

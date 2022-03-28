@@ -2,7 +2,6 @@ const Keluarga = require('../models/keluarga');
 const AnggotaKeluarga = require('../models/anggotaKeluarga');
 const Rt = require('../models/rt');
 const { errorHandling } = require('./errorHandling');
-const { validationResult } = require('express-validator');
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localstorage = new LocalStorage('./scratch');
 const jwt = require('jsonwebtoken');
@@ -18,38 +17,43 @@ exports.getDashboard = async (req, res, next) => {
 
     console.log(decodedToken);
 
-    if (decodedToken.role === 'Keluarga') {
-      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-      const anggotaPositif = await AnggotaKeluarga.find({
-        tokenRT: keluarga.tokenRT,
-        statusCovid: 'Positif',
-      });
-
-      res.render('dashboard/dashboard', {
-        title: 'Dashboard Jaga-RT',
-        keluarga,
-        anggotaPositif,
-      });
+    if (!decodedToken) {
+      res.render('index');
     } else {
-      res.render('index')
-    }
+      if (decodedToken.role === 'Keluarga') {
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+        const anggotaPositif = await AnggotaKeluarga.find({
+          tokenRT: keluarga.tokenRT,
+          statusCovid: 'Positif',
+          jwt: token,
+        });
 
-    if (decodedToken.role === 'RT') {
-      const keluarga = await Rt.findOne({ email: decodedToken.email });
-      const anggotaPositif = await AnggotaKeluarga.find({
-        tokenRT: keluarga._id,
-        statusCovid: 'Positif',
-      });
+        res.render('dashboard/dashboard', {
+          title: 'Dashboard Jaga-RT',
+          keluarga,
+          anggotaPositif,
+        });
+        /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+            res.user = keluarga;
+            next(); */
+      }
 
-      console.log(keluarga);
+      if (decodedToken.role === 'RT') {
+        const keluarga = await Rt.findOne({ email: decodedToken.email });
+        const anggotaPositif = await AnggotaKeluarga.find({
+          tokenRT: keluarga._id,
+          statusCovid: 'Positif',
+          jwt: token,
+        });
 
-      res.render('dashboard/dashboard', {
-        title: 'Dashboard Jaga-RT',
-        keluarga,
-        anggotaPositif,
-      });
-    } else {
-      res.render('index')
+        console.log(keluarga);
+
+        res.render('dashboard/dashboard', {
+          title: 'Dashboard Jaga-RT',
+          keluarga,
+          anggotaPositif,
+        });
+      }
     }
 
     res.render('index');
