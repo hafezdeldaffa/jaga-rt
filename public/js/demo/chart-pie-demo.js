@@ -12,25 +12,20 @@ $(document).ready(function () {
 var ctx = document.getElementById('myPieChart');
 
 const pieChartData = async () => {
-  let confirmedData = 0;
-  let deathsData = 0;
-  let recoveredData = 0;
+  let vaksinasiData1 = 0;
+  let vaksinasiData2 = 0;
   await $.ajax({
     url: '/piechartData',
     type: 'GET',
     datatype: 'json',
     success: (response) => {
       if (response !== null) {
-        console.log(response);
-        const { confirmed, deaths, recovered } = response;
-        const total = confirmed.value + deaths.value + recovered.value;
-        confirmedData = parseFloat(
-          ((confirmed.value / total) * 100).toFixed(2)
-        );
-        deathsData = parseFloat(((deaths.value / total) * 100).toFixed(2));
-        recoveredData = parseFloat(
-          ((recovered.value / total) * 100).toFixed(2)
-        );
+        console.log(response.vaksinasi.total);
+        const { vaksinasi } = response;
+        const total = vaksinasi.total.jumlah_vaksinasi_1 + vaksinasi.total.jumlah_vaksinasi_2;
+        console.log(total);
+        vaksinasiData1 = vaksinasi.total.jumlah_vaksinasi_1.toFixed(2);
+        vaksinasiData2 = vaksinasi.total.jumlah_vaksinasi_2.toFixed(2);
       }
     },
     error: (err) => {
@@ -41,10 +36,10 @@ const pieChartData = async () => {
   new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ['Kasus Positif', 'Kasus Kematian', 'Kasus Sembuh'],
+      labels: ['Vaksinasi Dosis 1', 'Vaksinasi Dosis 2'],
       datasets: [
         {
-          data: [confirmedData, deathsData, recoveredData],
+          data: [vaksinasiData1, vaksinasiData2],
           backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
           hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
           hoverBorderColor: 'rgba(234, 236, 244, 1)',
