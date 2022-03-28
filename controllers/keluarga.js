@@ -30,9 +30,8 @@ exports.getDashboard = async (req, res, next) => {
         keluarga,
         anggotaPositif,
       });
-      /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-          res.user = keluarga;
-          next(); */
+    } else {
+      res.render('index')
     }
 
     if (decodedToken.role === 'RT') {
@@ -49,6 +48,8 @@ exports.getDashboard = async (req, res, next) => {
         keluarga,
         anggotaPositif,
       });
+    } else {
+      res.render('index')
     }
 
     res.render('index');
