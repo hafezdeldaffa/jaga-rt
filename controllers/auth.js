@@ -112,7 +112,7 @@ exports.login = async (req, res, next) => {
       const keluarga = await Keluarga.findOne({ email: email });
 
       if (!keluarga) {
-        const error = new Error('Wrong email.');
+        const error = new Error('Wrong data. Please check your login data!');
         error.statusCode = 401;
         throw error;
       }
@@ -150,7 +150,7 @@ exports.login = async (req, res, next) => {
       const rt = await Rt.findOne({ email: email });
 
       if (!rt) {
-        const error = new Error('Wrong email.');
+        const error = new Error('Wrong data. Please check your login data!');
         error.statusCode = 401;
         throw error;
       }
