@@ -19,11 +19,10 @@ const lineChartData = async () => {
     datatype: 'json',
     success: (response) => {
       if (response !== null) {
-        response.forEach((element) => {
-          datesArray.push(element.reportDate);
-          console.log(element.reportDate);
-          confirmedArray.push(element.confirmed.total);
-          deathsArray.push(element.deaths.total);
+        response.update.harian.forEach((element) => {
+          datesArray.push(new Date(element.key_as_string).toDateString());
+          confirmedArray.push(element.jumlah_positif.value);
+          deathsArray.push(element.jumlah_meninggal);
         });
       }
     },
@@ -32,14 +31,16 @@ const lineChartData = async () => {
     },
   });
 
+  
+
   var ctx = document.getElementById('myAreaChart');
   new Chart(ctx, {
     type: 'line',
     data: {
-      labels: datesArray,
+      labels: datesArray.slice(Math.max(datesArray.length - 5, 1)),
       datasets: [
         {
-          label: 'Kasus Kematian',
+          label: 'Kasus Positif',
           lineTension: 0.3,
           backgroundColor: 'rgba(78, 115, 223, 0.05)',
           borderColor: 'rgba(78, 115, 223, 1)',
@@ -51,7 +52,7 @@ const lineChartData = async () => {
           pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
           pointHitRadius: 10,
           pointBorderWidth: 2,
-          data: deathsArray,
+          data: confirmedArray.slice(Math.max(datesArray.length - 5, 1)),
         },
       ],
     },

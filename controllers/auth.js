@@ -9,7 +9,6 @@ const bcrypt = require('bcrypt');
 const Keluarga = require('../models/keluarga');
 const Rt = require('../models/rt');
 const { errorHandling } = require('./errorHandling');
-const util = require('./util');
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./scratch');
 
@@ -112,7 +111,7 @@ exports.login = async (req, res, next) => {
       const keluarga = await Keluarga.findOne({ email: email });
 
       if (!keluarga) {
-        const error = new Error('Wrong email.');
+        const error = new Error('Wrong data. Please check your login data!');
         error.statusCode = 401;
         throw error;
       }
@@ -146,11 +145,12 @@ exports.login = async (req, res, next) => {
       }
 
       next();
-    } else {
+    } 
+    else if (role === 'RT') {
       const rt = await Rt.findOne({ email: email });
 
       if (!rt) {
-        const error = new Error('Wrong email.');
+        const error = new Error('Wrong data. Please check your login data!');
         error.statusCode = 401;
         throw error;
       }
@@ -183,6 +183,8 @@ exports.login = async (req, res, next) => {
         res.redirect('/dashboard');
       }
 
+      next();
+    } else {
       next();
     }
   } catch (error) {

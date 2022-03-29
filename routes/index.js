@@ -1,5 +1,5 @@
 const express = require('express');
-const { getDashboard } = require('../controllers/keluarga');
+const { getDashboard, getAnggotaDashboard, getLaporanDashboard, getMasyarakatDashboard } = require('../controllers/keluarga');
 const router = express.Router();
 const { pieChart, dailyData } = require('../controllers/covidData');
 
@@ -17,6 +17,9 @@ router.get('/signup', function (req, res, next) {
 });
 
 router.get('/dashboard', getDashboard);
+router.get('/keluarga', getAnggotaDashboard);
+router.get('/laporan', getLaporanDashboard);
+router.get('/masyarakat', getMasyarakatDashboard);
 
 router.get('/piechartData', pieChart);
 router.get('/dailyData', dailyData);

@@ -34,7 +34,23 @@ exports.addAnggotaKeluarga = async (req, res, next) => {
 
       const anggota = await newAnggota.save();
 
-      // const keluargaUpdated = await Keluarga.findByIdAndUpdate(keluargaId, newKeluarga);
+      res.json({ message: 'Berhasil menambahkan anggota keluarga', anggota });
+    } else {
+      const { nama, role, statusCovid } = req.body;
+
+      const keluarga = await RT.findOne({ email: email });
+      const keluargaId = keluarga._id;
+      const tokenRT = keluarga._id;
+
+      const newAnggota = new AnggotaKeluarga({
+        nama: nama,
+        role: role,
+        statusCovid: statusCovid,
+        tokenRT: tokenRT,
+        keluargaId: keluargaId,
+      });
+
+      const anggota = await newAnggota.save();
 
       res.json({ message: 'Berhasil menambahkan anggota keluarga', anggota });
     }
