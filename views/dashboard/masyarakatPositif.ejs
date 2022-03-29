@@ -11,9 +11,8 @@
 
     <title><%= title %> </title>
 
-    <link rel="shortcut icon" href="assets/images/icon-nobg.ico" type="image/svg" />
-
     <!-- Custom fonts for this template -->
+    <link rel="shortcut icon" href="assets/images/icon-nobg.ico" type="image/svg" />
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -59,14 +58,14 @@
                 Keluarga
             </div>
 
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="keluarga">
                     <i class="fas fa-list fa-sm fa-fw"></i>
                     <span>Anggota Keluarga</span></a>
             </li>
 
             <% if (keluarga.role==='RT' ) { %>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" href="masyarakat">
                         <i class="fas fa-fw fa-table"></i>
                         <span>Masyarakat Positif</span></a>
@@ -177,7 +176,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tabel Anggota Keluarga </h1>
+                    <h1 class="h3 mb-2 text-gray-800">Tabel Masyarakat Positif </h1>
                     <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
                         For more information about DataTables, please visit the <a target="_blank"
                             href="https://datatables.net">official DataTables documentation</a>.</p>
@@ -211,7 +210,16 @@
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        
+                                        <% masyarakatPositif.forEach(element => { %>
+                                         <tr>
+                                             <td><%= element.nama %> </td>
+                                             <td><%= element.keluargaId.namaKepalaKeluarga %> </td>
+                                             <td><%= element.statusCovid %> </td>
+                                             <td><%= element.keluargaId.alamat %> </td>
+                                             <td><%= element.keluargaId.rt %> </td>
+                                             <td><%= element.keluargaId.nomorRumah %> </td>
+                                         </tr>
+                                        <% }) %>
                                         
                                     </tbody>
                                 </table>

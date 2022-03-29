@@ -9,7 +9,6 @@ const bcrypt = require('bcrypt');
 const Keluarga = require('../models/keluarga');
 const Rt = require('../models/rt');
 const { errorHandling } = require('./errorHandling');
-const util = require('./util');
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./scratch');
 
@@ -146,7 +145,8 @@ exports.login = async (req, res, next) => {
       }
 
       next();
-    } else {
+    } 
+    else if (role === 'RT') {
       const rt = await Rt.findOne({ email: email });
 
       if (!rt) {
@@ -183,6 +183,8 @@ exports.login = async (req, res, next) => {
         res.redirect('/dashboard');
       }
 
+      next();
+    } else {
       next();
     }
   } catch (error) {
