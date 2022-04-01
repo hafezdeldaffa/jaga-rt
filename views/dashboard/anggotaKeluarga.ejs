@@ -64,6 +64,7 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard </span></a
           >
+          
         </li>
 
         <!-- Divider -->
@@ -219,8 +220,10 @@
           <!-- Begin Page Content -->
           <div class="container-fluid">
             <!-- Page Heading -->
-            <h1 class="h3 mb-2 text-gray-800">Tabel Anggota Keluarga</h1>
-            <br />
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Tabel Anggota Keluarga</h1>
+                <a href="#" class="btn btn-sm btn-success shadow-sm"> Tambah Anggota Keluarga</a>
+            </div>
 
             <!-- DataTales Example -->
             <div class="card shadow mb-4">
@@ -260,8 +263,8 @@
                         <td><%= element.role %></td>
                         <td><%= element.statusCovid %></td>
                         <td>
-                        <a clas href="editAnggota/<%= element._id %> "><button class="btn-primary">Edit</button></a>
-                        <a clas href="deleteAnggotaKeluarga/<%= element._id %> "><button class="btn-danger">Hapus</button></a>
+                        <a class="btn btn-sm btn-primary shadow-sm" href="editAnggota/<%= element._id %> ">Edit</a>
+                        <a class="btn btn-sm btn-danger shadow-sm" href="deleteAnggotaKeluarga/<%= element._id %> ">Hapus</a>
                         </td>
                           </form>
                         </td>
