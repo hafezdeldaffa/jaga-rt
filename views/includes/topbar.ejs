@@ -5,6 +5,12 @@
         <i class="fa fa-bars"></i>
     </button>
 
+    <% if (keluarga.role === 'RT') { %>
+        <div class="input-group">
+            <h7>Token RT : <%= keluarga._id %> </h7>
+        </div>
+    <% } %>
+
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
