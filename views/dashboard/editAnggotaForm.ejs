@@ -187,46 +187,37 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Data Masyarakat</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Data Anggota Keluarga</h6>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama Anggota Keluarga</th>
-                                            <th>Role</th>
-                                            <th>Status Covid-19</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Nama Anggota Keluarga</th>
-                                            <th>Role</th>
-                                            <th>Status Covid-19</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <% anggotaKeluarga.forEach(element=> { %>
-                                            <tr>
-                                                <td>
-                                                    <%= element.nama %>
-                                                </td>
-                                                <td>
-                                                    <%= element.role %>
-                                                </td>
-                                                <td>
-                                                    <%= element.statusCovid %>
-                                                </td>
-                                                <td><a href="editAnggota">Edit</a> | <a href="deleteAnggota">Hapus</a></td>
-                                            </tr>
-                                            <% }) %>
+                            <form class="user">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" value="<%= anggotaKeluarga.nama %>"
+                                        aria-describedby="emailHelp" placeholder="Nama Anggota Keluarga">
+                                </div>
+                                <div class="form-group">
+                                    <select name="role" class="form-control ">
+                                        <option value="" disabled label="Pilih Role" selected></option>
+                                        <option name="RT" id="rt" value="RT">RT</option>
+                                        <option name="Keluarga" id="keluarga" value="Keluarga">
+                                            Keluarga
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select name="role" class="form-control ">
+                                        <option value="" disabled label="Pilih Status Covid" selected></option>
+                                        <option name="Positif" id="positif" value="RT">RT</option>
+                                        <option name="Negatif" id="keluarga" value="Keluarga">
+                                            Keluarga
+                                        </option>
+                                    </select>
+                                </div>
+                                <a href="index.html" class="btn btn-primary btn-user btn-block">
+                                    Login
+                                </a>
 
-                                    </tbody>
-                                </table>
-                            </div>
+                            </form>
                         </div>
                     </div>
 
@@ -237,8 +228,8 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-                <%- include('../includes/footer') %>
-            <!-- End of footer -->
+            <%- include('../includes/footer') %>
+                <!-- End of footer -->
 
         </div>
         <!-- End of Content Wrapper -->

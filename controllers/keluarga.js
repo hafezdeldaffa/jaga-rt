@@ -205,17 +205,50 @@ exports.getMasyarakatDashboard = async (req, res, next) => {
   });
 };
 
-/* const keluarga = await Rt.findOne({ email: decodedToken.email });
-        const masyarakatPositif = await AnggotaKeluarga.find({
-          tokenRT: keluarga._id,
-          statusCovid: 'Positif',
-        }).populate('keluargaId', 'namaKepalaKeluarga rt alamat nomorRumah');
+exports.getEditAnggotaForm = async (req, res, next) => {
+  /* Get data from localStorage */
+  const token = localstorage.getItem("token");
 
-        console.log(keluarga);
+  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      errorHandling(err);
+    }
 
-        res.render('dashboard/anggotaKeluarga', {
-          title: 'Dashboard Jaga-RT',
-          keluarga,
-          masyarakatPositif,
+    if (!decodedToken) {
+      res.render("index");
+    } else {
+      if (decodedToken.role === "Keluarga") {
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+        const anggotaKeluarga = await AnggotaKeluarga.find({
+          tokenRT: keluarga.tokenRT,
+          keluargaId: keluarga._id,
         });
-      } */
+
+        res.render("dashboard/editAnggotaForm", {
+          title: "Dashboard Anggota Keluarga",
+          keluarga,
+          anggotaKeluarga,
+        });
+        /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+            res.user = keluarga;
+            next(); */
+      }
+
+      if (decodedToken.role === "RT") {
+        const keluarga = await Rt.findOne({ email: decodedToken.email });
+        const anggotaKeluarga = await AnggotaKeluarga.find({
+          tokenRT: keluarga._id,
+          keluargaId: keluarga._id,
+        });
+
+        res.render("dashboard/editAnggotaForm", {
+          title: "Dashboard Anggota Keluarga",
+          keluarga,
+          anggotaKeluarga,
+        });
+      }
+    }
+
+    res.render("index");
+  });
+}
