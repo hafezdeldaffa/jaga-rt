@@ -9,10 +9,10 @@ const {
 const { authenticateJWT } = require('../controllers/auth');
 const router = express.Router();
 
-router.get('/anggotaKeluarga', authenticateJWT, getAnggotaKeluarga);
-router.get('/anggotaKeluarga/:id', authenticateJWT, getAnggotaKeluargaById);
-router.post('/anggotaKeluarga', authenticateJWT, addAnggotaKeluarga);
-router.post('/anggotaKeluarga/:id', editAnggotaKeluarga);
-router.delete('/anggotaKeluarga/:id', authenticateJWT, deleteAnggotaKeluarga);
+// router.get('/anggotaKeluarga', getAnggotaKeluarga);
+// router.get('/anggotaKeluarga/:id', getAnggotaKeluargaById);
+// router.post('/anggotaKeluarga', addAnggotaKeluarga);
+router.post('/editAnggotaKeluarga/:id', editAnggotaKeluarga);
+router.get('/deleteAnggotaKeluarga/:id', deleteAnggotaKeluarga);
 
 module.exports = router;
