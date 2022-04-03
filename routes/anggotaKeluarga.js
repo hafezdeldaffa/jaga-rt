@@ -11,7 +11,7 @@ const router = express.Router();
 
 // router.get('/anggotaKeluarga', getAnggotaKeluarga);
 // router.get('/anggotaKeluarga/:id', getAnggotaKeluargaById);
-// router.post('/anggotaKeluarga', addAnggotaKeluarga);
+router.post('/tambahAnggotaKeluarga', addAnggotaKeluarga);
 router.post('/editAnggotaKeluarga/:id', editAnggotaKeluarga);
 router.get('/deleteAnggotaKeluarga/:id', deleteAnggotaKeluarga);
 

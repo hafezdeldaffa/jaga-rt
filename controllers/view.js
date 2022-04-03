@@ -227,9 +227,6 @@ exports.getEditAnggotaForm = async (req, res, next) => {
           keluarga,
           anggotaKeluarga,
         });
-        /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-            res.user = keluarga;
-            next(); */
       }
 
       if (decodedToken.role === 'RT') {
@@ -245,5 +242,43 @@ exports.getEditAnggotaForm = async (req, res, next) => {
     }
 
     res.render('index');
+  });
+};
+
+exports.getTambahAnggotaForm = async (req, res, next) => {
+  /* Get data from localStorage */
+  const token = localstorage.getItem('token');
+  const { id } = req.params;
+
+  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      errorHandling(err);
+    }
+
+    if (!decodedToken) {
+      res.render('index');
+    } else {
+      if (decodedToken.role === 'Keluarga') {
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+
+        res.render('dashboard/tambahAnggotaForm', {
+          title: 'Tambah Anggota Keluarga',
+          keluarga,
+        });
+
+        if (decodedToken.role === 'RT') {
+          const keluarga = await RT.findOne({
+            email: decodedToken.email,
+          });
+
+          res.render('dashboard/tambahAnggotaForm', {
+            title: 'Tambah Anggota Keluarga',
+            keluarga,
+          });
+        }
+      }
+
+      res.render('index');
+    }
   });
 };

@@ -5,6 +5,7 @@ const {
   getLaporanDashboard,
   getMasyarakatDashboard,
   getEditAnggotaForm,
+  getTambahAnggotaForm,
 } = require('../controllers/view');
 const router = express.Router();
 const { pieChart, dailyData } = require('../controllers/covidData');
@@ -28,7 +29,7 @@ router.get('/laporan', getLaporanDashboard);
 router.get('/masyarakat', getMasyarakatDashboard);
 
 router.get('/editAnggota/:id', getEditAnggotaForm);
-router.get('/tambahAnggota');
+router.get('/tambahAnggota', getTambahAnggotaForm);
 
 router.get('/piechartData', pieChart);
 router.get('/dailyData', dailyData);

@@ -8,62 +8,68 @@ const localstorage = new LocalStorage('./scratch');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-// exports.addAnggotaKeluarga = async (req, res, next) => {
-//   try {
-//     /* Creating validation */
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       const error = new Error('Validation error, entered data is incorrect');
-//       error.statusCode = 422;
-//       throw err;
-//     }
+exports.addAnggotaKeluarga = async (req, res, next) => {
+  try {
+    /* Creating validation */
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation error, entered data is incorrect');
+      error.statusCode = 422;
+      throw err;
+    }
 
-//     /* Get data from jwt */
-//     const { email, role } = req.user;
+    const token = localstorage.getItem('token');
+    const { nama, statusCovid, role } = req.body;
 
-//     if (role === 'Keluarga') {
-//       const { nama, role, statusCovid } = req.body;
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+      if (err) {
+        errorHandling(err);
+      }
 
-//       const keluarga = await Keluarga.findOne({ email: email });
-//       const keluargaId = keluarga._id;
-//       const tokenRT = keluarga.tokenRT;
+      if (!decodedToken) {
+        res.render('index');
+      } else {
+        if (decodedToken.role === 'Keluarga') {
+          const keluarga = await Keluarga.findOne({
+            email: decodedToken.email,
+          });
+          const newAnggota = new AnggotaKeluarga({
+            nama: nama,
+            role: role,
+            statusCovid: statusCovid,
+            keluargaId: keluarga._id,
+            tokenRT: keluarga.tokenRT,
+          });
 
-//       const newAnggota = new AnggotaKeluarga({
-//         nama: nama,
-//         role: role,
-//         statusCovid: statusCovid,
-//         tokenRT: tokenRT,
-//         keluargaId: keluargaId,
-//       });
+          await newAnggota.save();
 
-//       const anggota = await newAnggota.save();
+          res.redirect('/keluarga');
+        }
 
-//       res.json({ message: 'Berhasil menambahkan anggota keluarga', anggota });
-//     } else {
-//       const { nama, role, statusCovid } = req.body;
+        if (decodedToken.role === 'RT') {
+          const keluarga = await RT.findOne({ email: decodedToken.email });
+          const newAnggota = new AnggotaKeluarga({
+            nama: nama,
+            role: role,
+            statusCovid: statusCovid,
+            keluargaId: keluarga._id,
+            tokenRT: keluarga._id,
+          });
 
-//       const keluarga = await RT.findOne({ email: email });
-//       const keluargaId = keluarga._id;
-//       const tokenRT = keluarga._id;
+          await newAnggota.save();
 
-//       const newAnggota = new AnggotaKeluarga({
-//         nama: nama,
-//         role: role,
-//         statusCovid: statusCovid,
-//         tokenRT: tokenRT,
-//         keluargaId: keluargaId,
-//       });
+          res.redirect('/keluarga');
+        }
+      }
 
-//       const anggota = await newAnggota.save();
-
-//       res.json({ message: 'Berhasil menambahkan anggota keluarga', anggota });
-//     }
-//   } catch (error) {
-//     /* Handling Errors */
-//     errorHandling(error);
-//     next(error);
-//   }
-// };
+      res.render('index');
+    });
+  } catch (error) {
+    /* Handling Errors */
+    errorHandling(error);
+    next(error);
+  }
+};
 
 // exports.getAnggotaKeluarga = async (req, res, next) => {
 //   try {
@@ -128,31 +134,12 @@ const mongoose = require('mongoose');
 exports.editAnggotaKeluarga = async (req, res, next) => {
   try {
     /* Creating validation */
-    /* const errors = validationResult(req);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const error = new Error('Validation error, entered data is incorrect');
       error.statusCode = 422;
       throw err;
-    } */
-
-    // const { id } = req.params;
-
-    /* Get data from jwt */
-    /* const { email, role } = req.user;
-
-    if (role === 'Keluarga') {
-      const { nama, statusCovid, role } = req.body;
-
-      const newAnggota = {
-        nama: nama,
-        role: role,
-        statusCovid: statusCovid,
-      };
-
-      await AnggotaKeluarga.findOneAndUpdate({ _id: id }, newAnggota);
-
-      res.json({ message: 'Update anggota success' });
-    } */
+    }
 
     const token = localstorage.getItem('token');
     const { id } = req.params;
@@ -178,42 +165,26 @@ exports.editAnggotaKeluarga = async (req, res, next) => {
             tokenRT: keluarga.tokenRT,
           };
 
-          const anggota = await AnggotaKeluarga.findByIdAndUpdate(
-            id,
-            newAnggota
-          );
-          console.log(anggota);
-
-          /* const anggotaKeluarga = await AnggotaKeluarga.find({
-            tokenRT: keluarga.tokenRT,
-            keluargaId: keluarga._id,
-          }); */
+          await AnggotaKeluarga.findByIdAndUpdate(id, newAnggota);
 
           res.redirect('/keluarga');
-          /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-            res.user = keluarga;
-            next(); */
         }
 
         if (decodedToken.role === 'RT') {
-          const keluarga = await RT.findOne({ email: decodedToken.email });
+          const keluarga = await RT.findOne({
+            email: decodedToken.email,
+          });
           const newAnggota = {
             nama: nama,
             role: role,
             statusCovid: statusCovid,
-          };
-          await AnggotaKeluarga.findOneAndUpdate({ _id: id }, newAnggota);
-
-          const anggotaKeluarga = await AnggotaKeluarga.find({
-            tokenRT: keluarga._id,
             keluargaId: keluarga._id,
-          });
+            tokenRT: keluarga._id,
+          };
 
-          res.render('dashboard/anggotaKeluarga', {
-            title: 'Dashboard Anggota Keluarga',
-            keluarga,
-            anggotaKeluarga,
-          });
+          await AnggotaKeluarga.findByIdAndUpdate(id, newAnggota);
+
+          res.redirect('/keluarga');
         }
       }
 
