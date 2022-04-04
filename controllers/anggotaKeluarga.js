@@ -6,7 +6,6 @@ const RT = require('../models/rt');
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localstorage = new LocalStorage('./scratch');
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 
 exports.addAnggotaKeluarga = async (req, res, next) => {
   try {
@@ -181,6 +180,8 @@ exports.editAnggotaKeluarga = async (req, res, next) => {
             keluargaId: keluarga._id,
             tokenRT: keluarga._id,
           };
+
+          console.log(newAnggota);
 
           await AnggotaKeluarga.findByIdAndUpdate(id, newAnggota);
 
