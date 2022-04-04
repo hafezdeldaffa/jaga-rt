@@ -265,9 +265,9 @@ exports.getTambahAnggotaForm = async (req, res, next) => {
           title: 'Tambah Anggota Keluarga',
           keluarga,
         });
-
+      }
         if (decodedToken.role === 'RT') {
-          const keluarga = await RT.findOne({
+          const keluarga = await Rt.findOne({
             email: decodedToken.email,
           });
 
@@ -280,5 +280,5 @@ exports.getTambahAnggotaForm = async (req, res, next) => {
 
       res.render('index');
     }
-  });
+  );
 };
