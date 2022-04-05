@@ -2,42 +2,22 @@
     MODEL UNTUK MEMBUAT LAPORAN
 */
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const laporanSchema = new Schema(
   {
-    nama: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      required: true,
-    },
-    alamat: {
-      type: String,
-      required: true,
-    },
-    nomorRumah: {
-      type: Number,
-      required: true,
-    },
-    rt: {
-      type: Number,
-      required: true,
-    },
     anggotaId: {
       type: Schema.Types.ObjectId,
-      ref: 'AnggotaKeluarga',
+      ref: "AnggotaKeluarga",
       required: true,
     },
     keluargaId: {
       type: Schema.Types.ObjectId,
-      ref: 'Keluarga',
+      ref: "Keluarga",
       required: true,
     },
-    gejala: {
+    laporan: {
       type: String,
       required: true,
     },
@@ -48,4 +28,4 @@ const laporanSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Laporan', laporanSchema);
+module.exports = mongoose.model("Laporan", laporanSchema);

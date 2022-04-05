@@ -117,7 +117,7 @@ exports.getLaporanDashboard = async (req, res, next) => {
         const anggotaPositif = await AnggotaKeluarga.find({
           keluargaId: keluarga._id,
           statusCovid: "Positif",
-        }).populate('keluargaId', 'namaKepalaKeluarga nomorRumah');
+        }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
 
         res.render("dashboard/laporan", {
           title: "Dashboard Laporan",
@@ -131,7 +131,7 @@ exports.getLaporanDashboard = async (req, res, next) => {
         const anggotaPositif = await AnggotaKeluarga.find({
           keluargaId: keluarga._id,
           statusCovid: "Positif",
-        }).populate('keluargaId', 'namaKepalaKeluarga nomorRumah');
+        }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
 
         res.render("dashboard/laporan", {
           title: "Dashboard Laporan",
@@ -194,83 +194,6 @@ exports.getMasyarakatDashboard = async (req, res, next) => {
       }
       next();
     }
-    res.render("index");
-  });
-};
-
-exports.getEditAnggotaForm = async (req, res, next) => {
-  /* Get data from localStorage */
-  const token = localstorage.getItem("token");
-  const { id } = req.params;
-
-  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-    if (err) {
-      errorHandling(err);
-    }
-
-    if (!decodedToken) {
-      res.render("index");
-    } else {
-      if (decodedToken.role === "Keluarga") {
-        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-        const anggotaKeluarga = await AnggotaKeluarga.findById(id);
-
-        res.render("forms/editAnggotaForm", {
-          title: "Edit Anggota Keluarga",
-          keluarga,
-          anggotaKeluarga,
-        });
-      }
-
-      if (decodedToken.role === "RT") {
-        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-        const anggotaKeluarga = await AnggotaKeluarga.findById(id);
-
-        res.render("forms/editAnggotaForm", {
-          title: "Edit Anggota Keluarga",
-          keluarga,
-          anggotaKeluarga,
-        });
-      }
-    }
-
-    res.render("index");
-  });
-};
-
-exports.getTambahAnggotaForm = async (req, res, next) => {
-  /* Get data from localStorage */
-  const token = localstorage.getItem("token");
-  const { id } = req.params;
-
-  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-    if (err) {
-      errorHandling(err);
-    }
-
-    if (!decodedToken) {
-      res.render("index");
-    } else {
-      if (decodedToken.role === "Keluarga") {
-        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-
-        res.render("forms/tambahAnggotaForm", {
-          title: "Tambah Anggota Keluarga",
-          keluarga,
-        });
-      }
-      if (decodedToken.role === "RT") {
-        const keluarga = await Keluarga.findOne({
-          email: decodedToken.email,
-        });
-
-        res.render("forms/tambahAnggotaForm", {
-          title: "Tambah Anggota Keluarga",
-          keluarga,
-        });
-      }
-    }
-
     res.render("index");
   });
 };

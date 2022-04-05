@@ -1,20 +1,15 @@
-const express = require('express');
-const { authenticateJWT } = require('../controllers/auth');
+const express = require("express");
 const {
-  getDataPositif,
   addLaporan,
-  getLaporan,
   getLaporanById,
   editLaporan,
   deleteLaporan,
-} = require('../controllers/laporan');
+} = require("../controllers/laporan");
 const router = express.Router();
 
-/* router.get('/data-positif', authenticateJWT, getDataPositif);
-router.get('/laporan', authenticateJWT, getLaporan);
-router.get('/laporan/:id', authenticateJWT, getLaporanById);
-router.post('/laporan/:id', authenticateJWT, addLaporan);
-router.put('/laporan/:id', authenticateJWT, editLaporan);
-router.delete('/laporan/:id', authenticateJWT, deleteLaporan); */
+// router.get("/laporan/:id", getLaporanById);
+router.post("/tambahLaporan/:id", addLaporan);
+router.post("/editLaporan/:id", editLaporan);
+// router.get("/laporan/:id", deleteLaporan);
 
 module.exports = router;

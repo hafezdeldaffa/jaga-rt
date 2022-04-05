@@ -1,85 +1,65 @@
-const AnggotaKeluarga = require('../models/anggotaKeluarga');
-const Keluarga = require('../models/keluarga');
-const { errorHandling } = require('./errorHandling');
-const { validationResult } = require('express-validator');
-const Laporan = require('../models/laporan');
-
-exports.getDataPositif = async (req, res, next) => {
-  try {
-    /* Creating validation */
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new Error('Validation error, entered data is incorrect');
-      error.statusCode = 422;
-      throw err;
-    }
-
-    /* Get data from jwt */
-    const { email, role } = req.user;
-
-    if (role === 'Keluarga') {
-      const keluarga = await Keluarga.findOne({ email: email });
-      const keluargaId = keluarga._id;
-      const tokenRT = keluarga.tokenRT;
-
-      const anggota = await AnggotaKeluarga.find({
-        keluargaId: keluargaId,
-        statusCovid: 'Positif',
-      });
-
-      // const keluargaUpdated = await Keluarga.findByIdAndUpdate(keluargaId, newKeluarga);
-
-      res.json({
-        message: 'Berhasil menemnukan anggota keluarga positif',
-        anggota,
-      });
-    }
-  } catch (error) {
-    /* Handling Errors */
-    errorHandling(error);
-    next(error);
-  }
-};
+const AnggotaKeluarga = require("../models/anggotaKeluarga");
+const Keluarga = require("../models/keluarga");
+const { errorHandling } = require("./errorHandling");
+const { validationResult } = require("express-validator");
+const Laporan = require("../models/laporan");
+const LocalStorage = require("node-localstorage").LocalStorage;
+const localstorage = new LocalStorage("./scratch");
+const jwt = require("jsonwebtoken");
 
 exports.addLaporan = async (req, res, next) => {
   try {
     /* Creating validation */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error('Validation error, entered data is incorrect');
+      const error = new Error("Validation error, entered data is incorrect");
       error.statusCode = 422;
       throw err;
     }
 
-    /* Get data from jwt */
-    const { email, role } = req.user;
+    const token = localstorage.getItem("token");
+    const { id } = req.params;
+    const { laporan, catatan } = req.body;
 
-    if (role === 'Keluarga') {
-      const { id } = req.params;
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+      if (err) {
+        errorHandling(err);
+      }
 
-      const { gejala, catatan } = req.body;
+      if (!decodedToken) {
+        res.render("index");
+      } else {
+        if (decodedToken.role === "Keluarga") {
+          const anggota = await AnggotaKeluarga.findById(id);
+          const newLaporan = await new Laporan({
+            anggotaId: anggota._id,
+            keluargaId: anggota.keluargaId,
+            laporan: laporan,
+            catatan: catatan
+          })
 
-      const anggota = await AnggotaKeluarga.findById(id).populate(
-        'keluargaId',
-        'alamat nomorRumah rt'
-      );
+          await newLaporan.save();
 
-      const laporan = new Laporan({
-        nama: anggota.nama,
-        role: anggota.role,
-        keluargaId: anggota.keluargaId._id,
-        anggotaId: anggota._id,
-        alamat: anggota.keluargaId.alamat,
-        nomorRumah: anggota.keluargaId.nomorRumah,
-        rt: anggota.keluargaId.rt,
-        gejala: gejala,
-        catatan: catatan,
-      });
+          res.redirect("/laporan");
+        }
 
-      const newLaporan = await laporan.save();
+        if (decodedToken.role === "RT") {
+          const anggota = await AnggotaKeluarga.findById(id);
+          const newLaporan = await new Laporan({
+            anggotaId: anggota._id,
+            keluargaId: anggota.keluargaId,
+            laporan: laporan,
+            catatan: catatan
+          })
 
-      res.json({ message: 'Laporan berhasil ditambahkan', newLaporan });
-    }
+          await newLaporan.save();
+
+          res.redirect("/laporan");
+        }
+      }
+
+      res.render("index");
+    });
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);
@@ -87,102 +67,117 @@ exports.addLaporan = async (req, res, next) => {
   }
 };
 
-exports.getLaporan = async (req, res, next) => {
-  try {
-    /* Creating validation */
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new Error('Validation error, entered data is incorrect');
-      error.statusCode = 422;
-      throw err;
-    }
+// exports.getLaporan = async (req, res, next) => {
+//   try {
+//     /* Creating validation */
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       const error = new Error('Validation error, entered data is incorrect');
+//       error.statusCode = 422;
+//       throw err;
+//     }
 
-    /* Get data from jwt */
-    const { email, role } = req.user;
+//     /* Get data from jwt */
+//     const { email, role } = req.user;
 
-    if (role === 'Keluarga') {
-      const keluarga = await Keluarga.findOne({ email: email });
-      const keluargaId = keluarga._id;
+//     if (role === 'Keluarga') {
+//       const keluarga = await Keluarga.findOne({ email: email });
+//       const keluargaId = keluarga._id;
 
-      const laporan = await Laporan.find({ keluargaId: keluargaId });
+//       const laporan = await Laporan.find({ keluargaId: keluargaId });
 
-      res.json({ message: 'Laporan berhasil ditemukan', laporan });
-    }
-  } catch (error) {
-    /* Handling Errors */
-    errorHandling(error);
-    next(error);
-  }
-};
+//       res.json({ message: 'Laporan berhasil ditemukan', laporan });
+//     }
+//   } catch (error) {
+//     /* Handling Errors */
+//     errorHandling(error);
+//     next(error);
+//   }
+// };
 
-exports.getLaporanById = async (req, res, next) => {
-  try {
-    /* Creating validation */
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new Error('Validation error, entered data is incorrect');
-      error.statusCode = 422;
-      throw err;
-    }
+// exports.getLaporanById = async (req, res, next) => {
+//   try {
+//     /* Creating validation */
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       const error = new Error('Validation error, entered data is incorrect');
+//       error.statusCode = 422;
+//       throw err;
+//     }
 
-    /* Get data from jwt */
-    const { email, role } = req.user;
+//     /* Get data from jwt */
+//     const { email, role } = req.user;
 
-    if (role === 'Keluarga') {
-      const { id } = req.params;
+//     if (role === 'Keluarga') {
+//       const { id } = req.params;
 
-      const keluarga = await Keluarga.findOne({ email: email });
-      const keluargaId = keluarga._id;
+//       const keluarga = await Keluarga.findOne({ email: email });
+//       const keluargaId = keluarga._id;
 
-      const laporan = await Laporan.findById(id);
+//       const laporan = await Laporan.findById(id);
 
-      res.json({ message: 'Laporan By ID berhasil ditemukan', laporan });
-    }
-  } catch (error) {
-    /* Handling Errors */
-    errorHandling(error);
-    next(error);
-  }
-};
+//       res.json({ message: 'Laporan By ID berhasil ditemukan', laporan });
+//     }
+//   } catch (error) {
+//     /* Handling Errors */
+//     errorHandling(error);
+//     next(error);
+//   }
+// };
 
 exports.editLaporan = async (req, res, next) => {
   try {
     /* Creating validation */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error('Validation error, entered data is incorrect');
+      const error = new Error("Validation error, entered data is incorrect");
       error.statusCode = 422;
       throw err;
     }
 
-    /* Get data from jwt */
-    const { email, role } = req.user;
+    const token = localstorage.getItem("token");
+    const { id } = req.params;
+    const { idAnggota ,laporan, catatan } = req.body;
 
-    if (role === 'Keluarga') {
-      const { id } = req.params;
-      const { gejala, catatan } = req.body;
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+      if (err) {
+        errorHandling(err);
+      }
 
-      const laporan = await Laporan.findById(id);
-      const anggotaId = laporan.anggotaId;
+      if (!decodedToken) {
+        res.render("index");
+      } else {
+        if (decodedToken.role === "Keluarga") {
+          const anggota = await AnggotaKeluarga.findById(idAnggota);
+          const newLaporan = {
+            anggotaId: anggota._id,
+            keluargaId: anggota.keluargaId,
+            laporan: laporan,
+            catatan: catatan
+          };
 
-      const anggota = await AnggotaKeluarga.findById(anggotaId);
+          await Laporan.findOneAndReplace(id, newLaporan);
 
-      const newLaporan = {
-        nama: anggota.nama,
-        role: anggota.role,
-        keluargaId: anggota.keluargaId._id,
-        anggotaId: anggota._id,
-        alamat: anggota.keluargaId.alamat,
-        nomorRumah: anggota.keluargaId.nomorRumah,
-        rt: anggota.keluargaId.rt,
-        gejala: gejala,
-        catatan: catatan,
-      };
+          res.redirect("/laporan");
+        }
 
-      const updatedLaporan = await Laporan.findByIdAndUpdate(id, newLaporan);
+        if (decodedToken.role === "RT") {
+          const anggota = await AnggotaKeluarga.findById(id);
+          const newLaporan = {
+            anggotaId: anggota._id,
+            keluargaId: anggota.keluargaId,
+            laporan: laporan,
+            catatan: catatan
+          }
 
-      res.json({ message: 'Laporan berhasil diupdate', updatedLaporan });
-    }
+          await Laporan.findOneAndReplace(id, newLaporan);
+
+          res.redirect("/laporan");
+        }
+      }
+
+      res.render("index");
+    });
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);
@@ -195,7 +190,7 @@ exports.deleteLaporan = async (req, res, next) => {
     /* Creating validation */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error('Validation error, entered data is incorrect');
+      const error = new Error("Validation error, entered data is incorrect");
       error.statusCode = 422;
       throw err;
     }
@@ -203,16 +198,16 @@ exports.deleteLaporan = async (req, res, next) => {
     /* Get data from jwt */
     const { email, role } = req.user;
 
-    if (role === 'Keluarga') {
+    if (role === "Keluarga") {
       const { id } = req.params;
 
       await Laporan.findByIdAndDelete(id);
 
-      res.json({ message: 'Berhasil menghapus laporan' });
+      res.json({ message: "Berhasil menghapus laporan" });
     }
   } catch (error) {
-		/* Handling Errors */
+    /* Handling Errors */
     errorHandling(error);
     next(error);
-	}
+  }
 };
