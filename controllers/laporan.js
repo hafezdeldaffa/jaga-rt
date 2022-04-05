@@ -29,33 +29,19 @@ exports.addLaporan = async (req, res, next) => {
       if (!decodedToken) {
         res.render("index");
       } else {
-        if (decodedToken.role === "Keluarga") {
+        
           const anggota = await AnggotaKeluarga.findById(id);
           const newLaporan = await new Laporan({
             anggotaId: anggota._id,
             keluargaId: anggota.keluargaId,
             laporan: laporan,
-            catatan: catatan
-          })
+            catatan: catatan,
+          });
 
           await newLaporan.save();
 
           res.redirect("/laporan");
-        }
-
-        if (decodedToken.role === "RT") {
-          const anggota = await AnggotaKeluarga.findById(id);
-          const newLaporan = await new Laporan({
-            anggotaId: anggota._id,
-            keluargaId: anggota.keluargaId,
-            laporan: laporan,
-            catatan: catatan
-          })
-
-          await newLaporan.save();
-
-          res.redirect("/laporan");
-        }
+        
       }
 
       res.render("index");
@@ -66,64 +52,6 @@ exports.addLaporan = async (req, res, next) => {
     next(error);
   }
 };
-
-// exports.getLaporan = async (req, res, next) => {
-//   try {
-//     /* Creating validation */
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       const error = new Error('Validation error, entered data is incorrect');
-//       error.statusCode = 422;
-//       throw err;
-//     }
-
-//     /* Get data from jwt */
-//     const { email, role } = req.user;
-
-//     if (role === 'Keluarga') {
-//       const keluarga = await Keluarga.findOne({ email: email });
-//       const keluargaId = keluarga._id;
-
-//       const laporan = await Laporan.find({ keluargaId: keluargaId });
-
-//       res.json({ message: 'Laporan berhasil ditemukan', laporan });
-//     }
-//   } catch (error) {
-//     /* Handling Errors */
-//     errorHandling(error);
-//     next(error);
-//   }
-// };
-
-// exports.getLaporanById = async (req, res, next) => {
-//   try {
-//     /* Creating validation */
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       const error = new Error('Validation error, entered data is incorrect');
-//       error.statusCode = 422;
-//       throw err;
-//     }
-
-//     /* Get data from jwt */
-//     const { email, role } = req.user;
-
-//     if (role === 'Keluarga') {
-//       const { id } = req.params;
-
-//       const keluarga = await Keluarga.findOne({ email: email });
-//       const keluargaId = keluarga._id;
-
-//       const laporan = await Laporan.findById(id);
-
-//       res.json({ message: 'Laporan By ID berhasil ditemukan', laporan });
-//     }
-//   } catch (error) {
-//     /* Handling Errors */
-//     errorHandling(error);
-//     next(error);
-//   }
-// };
 
 exports.editLaporan = async (req, res, next) => {
   try {
@@ -137,7 +65,7 @@ exports.editLaporan = async (req, res, next) => {
 
     const token = localstorage.getItem("token");
     const { id } = req.params;
-    const { idAnggota ,laporan, catatan } = req.body;
+    const { idAnggota, laporan, catatan } = req.body;
 
     jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
       if (err) {
@@ -153,7 +81,7 @@ exports.editLaporan = async (req, res, next) => {
             anggotaId: anggota._id,
             keluargaId: anggota.keluargaId,
             laporan: laporan,
-            catatan: catatan
+            catatan: catatan,
           };
 
           await Laporan.findOneAndReplace(id, newLaporan);
@@ -167,8 +95,8 @@ exports.editLaporan = async (req, res, next) => {
             anggotaId: anggota._id,
             keluargaId: anggota.keluargaId,
             laporan: laporan,
-            catatan: catatan
-          }
+            catatan: catatan,
+          };
 
           await Laporan.findOneAndReplace(id, newLaporan);
 
@@ -187,24 +115,24 @@ exports.editLaporan = async (req, res, next) => {
 
 exports.deleteLaporan = async (req, res, next) => {
   try {
-    /* Creating validation */
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new Error("Validation error, entered data is incorrect");
-      error.statusCode = 422;
-      throw err;
-    }
+    const token = localstorage.getItem("token");
+    const { id } = req.params;
 
-    /* Get data from jwt */
-    const { email, role } = req.user;
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+      if (err) {
+        errorHandling(err);
+      }
 
-    if (role === "Keluarga") {
-      const { id } = req.params;
+      if (!decodedToken) {
+        res.render("index");
+      } else {
+        await Laporan.findByIdAndDelete(id);
 
-      await Laporan.findByIdAndDelete(id);
+        res.redirect("/laporan");
+      }
 
-      res.json({ message: "Berhasil menghapus laporan" });
-    }
+      res.render("index");
+    });
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);

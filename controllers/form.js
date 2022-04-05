@@ -94,36 +94,18 @@ exports.getTambahLaporanForm = async (req, res, next) => {
     if (!decodedToken) {
       res.render("index");
     } else {
-      if (decodedToken.role === "Keluarga") {
-        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-        const anggotaKeluarga = await AnggotaKeluarga.findOne({
-          _id: id,
-          keluargaId: keluarga._id,
-          statusCovid: "Positif",
-        }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
+      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+      const anggotaKeluarga = await AnggotaKeluarga.findOne({
+        _id: id,
+        keluargaId: keluarga._id,
+        statusCovid: "Positif",
+      }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
 
-        res.render("forms/tambahLaporanForm", {
-          title: "Tambah Laporan Keluarga",
-          keluarga,
-          anggotaKeluarga,
-        });
-      }
-      if (decodedToken.role === "RT") {
-        const keluarga = await Keluarga.findOne({
-          email: decodedToken.email,
-        });
-        const anggotaKeluarga = await AnggotaKeluarga.find({
-          _id: id,
-          keluargaId: keluarga._id,
-          statusCovid: "Positif",
-        }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
-
-        res.render("forms/tambahLaporanForm", {
-          title: "Tambah Laporan Keluarga",
-          keluarga,
-          anggotaKeluarga,
-        });
-      }
+      res.render("forms/tambahLaporanForm", {
+        title: "Tambah Laporan Keluarga",
+        keluarga,
+        anggotaKeluarga,
+      });
     }
 
     res.render("index");
@@ -131,56 +113,73 @@ exports.getTambahLaporanForm = async (req, res, next) => {
 };
 
 exports.getEditLaporanForm = async (req, res, next) => {
-    /* Get data from localStorage */
-    const token = localstorage.getItem("token");
-    const { id } = req.params;
-  
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        errorHandling(err);
-      }
-  
-      if (!decodedToken) {
-        res.render("index");
-      } else {
-        if (decodedToken.role === "Keluarga") {
-          const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-          const anggotaKeluarga = await AnggotaKeluarga.findOne({
-            _id: id,
-            keluargaId: keluarga._id,
-            statusCovid: "Positif",
-          }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
+  /* Get data from localStorage */
+  const token = localstorage.getItem("token");
+  const { id } = req.params;
 
-          const laporan = await Laporan.findOne({anggotaId: id, keluargaId: keluarga._id})
-  
-          res.render("forms/editLaporanForm", {
-            title: "Edit Laporan Keluarga",
-            keluarga,
-            anggotaKeluarga,
-            laporan
-          });
-        }
-        if (decodedToken.role === "RT") {
-          const keluarga = await Keluarga.findOne({
-            email: decodedToken.email,
-          });
-          const anggotaKeluarga = await AnggotaKeluarga.find({
-            _id: id,
-            keluargaId: keluarga._id,
-            statusCovid: "Positif",
-          }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
+  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      errorHandling(err);
+    }
 
-          const laporan = await Laporan.findOne({anggotaId: id, keluargaId: keluarga._id})
-  
-          res.render("forms/editLaporanForm", {
-            title: "Edit Laporan Keluarga",
-            keluarga,
-            anggotaKeluarga,
-            laporan
-          });
-        }
-      }
-  
+    if (!decodedToken) {
       res.render("index");
-    });
-  };
+    } else {
+      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+      const anggotaKeluarga = await AnggotaKeluarga.findOne({
+        _id: id,
+        keluargaId: keluarga._id,
+        statusCovid: "Positif",
+      }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
+
+      const laporan = await Laporan.findOne({
+        anggotaId: id,
+        keluargaId: keluarga._id,
+      });
+
+      res.render("forms/editLaporanForm", {
+        title: "Edit Laporan Keluarga",
+        keluarga,
+        anggotaKeluarga,
+        laporan,
+      });
+    }
+
+    res.render("index");
+  });
+};
+
+exports.getDetailLaporanForm = async (req, res, next) => {
+  /* Get data from localStorage */
+  const token = localstorage.getItem("token");
+  const { id } = req.params;
+
+  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      errorHandling(err);
+    }
+
+    if (!decodedToken) {
+      res.render("index");
+    } else {
+      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
+      const anggotaKeluarga = await AnggotaKeluarga.findOne({
+        _id: id,
+        statusCovid: "Positif",
+      });
+
+      const laporan = await Laporan.findOne({
+        anggotaId: id,
+      });
+
+      res.render("forms/detailLaporanForm", {
+        title: "Edit Laporan Keluarga",
+        keluarga,
+        anggotaKeluarga,
+        laporan,
+      });
+    }
+
+    res.render("index");
+  });
+};

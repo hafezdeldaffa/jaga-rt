@@ -69,66 +69,6 @@ exports.addAnggotaKeluarga = async (req, res, next) => {
   }
 };
 
-// exports.getAnggotaKeluarga = async (req, res, next) => {
-//   try {
-//     /* Creating validation */
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       const error = new Error('Validation error, entered data is incorrect');
-//       error.statusCode = 422;
-//       throw err;
-//     }
-
-//     /* Get data from jwt */
-//     const { email, role } = req.user;
-
-//     if (role === 'Keluarga') {
-//       const keluarga = await Keluarga.findOne({ email: email });
-//       const keluargaId = keluarga._id;
-
-//       const anggotaKeluarga = await AnggotaKeluarga.find({
-//         keluargaId: keluargaId,
-//       }).populate('keluargaId', 'namaKepalaKeluarga nomorRumah rt');
-
-//       res.json({ message: 'Anggota keluarga found', anggotaKeluarga });
-//     }
-//   } catch (error) {
-//     /* Handling Errors */
-//     errorHandling(error);
-//     next(error);
-//   }
-// };
-
-// exports.getAnggotaKeluargaById = async (req, res, next) => {
-//   try {
-//     /* Creating validation */
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       const error = new Error('Validation error, entered data is incorrect');
-//       error.statusCode = 422;
-//       throw err;
-//     }
-
-//     const { id } = req.params;
-
-//     /* Get data from jwt */
-//     const { email, role } = req.user;
-
-//     if (role === 'Keluarga') {
-//       const anggota = await AnggotaKeluarga.findById(id).populate(
-//         'keluargaId',
-//         'namaKepalaKeluarga nomorRumah rt'
-//       );
-
-//       res.json({ message: 'Anggota by id found', anggota });
-//     }
-//   } catch (error) {
-//     /* Handling Errors */
-//     errorHandling(error);
-//     next(error);
-//   }
-// };
-
 exports.editAnggotaKeluarga = async (req, res, next) => {
   try {
     /* Creating validation */

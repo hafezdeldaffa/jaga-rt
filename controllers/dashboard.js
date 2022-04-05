@@ -4,6 +4,7 @@ const { errorHandling } = require("./errorHandling");
 const LocalStorage = require("node-localstorage").LocalStorage;
 const localstorage = new LocalStorage("./scratch");
 const jwt = require("jsonwebtoken");
+const Laporan = require("../models/laporan");
 
 exports.getDashboard = async (req, res, next) => {
   /* Get data from localStorage */
@@ -71,8 +72,6 @@ exports.getAnggotaDashboard = async (req, res, next) => {
           tokenRT: keluarga.tokenRT,
           keluargaId: keluarga._id,
         });
-
-        console.log(req.user);
 
         res.render("dashboard/anggotaKeluarga", {
           title: "Dashboard Anggota Keluarga",
@@ -182,14 +181,15 @@ exports.getMasyarakatDashboard = async (req, res, next) => {
         const masyarakatPositif = await AnggotaKeluarga.find({
           tokenRT: keluarga._id,
           statusCovid: "Positif",
-        }).populate("keluargaId", "namaKepalaKeluarga rt alamat nomorRumah");
+        }).populate("keluargaId", "namaKepalaKeluarga rt rw alamat nomorRumah");
 
-        console.log(masyarakatPositif);
+        const laporan = await Laporan.find().populate('anggotaId keluargaId', 'nama statusCovid namaKepalaKeluarga rt rw alamat nomorRumah');
 
         res.render("dashboard/masyarakatPositif", {
           title: "Dashboard Masyarakat Positif",
           keluarga,
           masyarakatPositif,
+          laporan
         });
       }
       next();

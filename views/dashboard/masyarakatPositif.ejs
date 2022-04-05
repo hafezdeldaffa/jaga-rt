@@ -164,22 +164,24 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Nama Warga</th>
-                                            <th>Nama Kepala Keluarga</th>
+                                            <th>Nama Warga Positif</th>
                                             <th>Status</th>
+                                            <th>Nama Kepala Keluarga</th>
                                             <th>Alamat</th>
                                             <th>RT</th>
+                                            <th>RW</th>
                                             <th>No. Rumah</th>
                                             <th>Laporan</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Nama Warga</th>
-                                            <th>Nama Kepala Keluarga</th>
+                                            <th>Nama Warga Positif</th>
                                             <th>Status</th>
+                                            <th>Nama Kepala Keluarga</th>
                                             <th>Alamat</th>
                                             <th>RT</th>
+                                            <th>RW</th>
                                             <th>No. Rumah</th>
                                             <th>Laporan</th>
                                         </tr>
@@ -191,10 +193,10 @@
                                                     <%= element.nama %>
                                                 </td>
                                                 <td>
-                                                    <%= element.keluargaId.namaKepalaKeluarga %>
+                                                    <%= element.statusCovid %>
                                                 </td>
                                                 <td>
-                                                    <%= element.statusCovid %>
+                                                    <%= element.keluargaId.namaKepalaKeluarga %>
                                                 </td>
                                                 <td>
                                                     <%= element.keluargaId.alamat %>
@@ -203,10 +205,14 @@
                                                     <%= element.keluargaId.rt %>
                                                 </td>
                                                 <td>
+                                                    <%= element.keluargaId.rw %>
+                                                </td>
+                                                <td>
                                                     <%= element.keluargaId.nomorRumah %>
                                                 </td>
                                                 <td><a class="btn btn-sm btn-secondary shadow-sm"
-                                                    href="detailLaporan/<%= element._id %>">Detail</a></td>
+                                                        href="detailLaporanForm/<%= element._id %>">Detail</a></td>
+                                                </td>
                                             </tr>
                                             <% }) %>
 
@@ -215,7 +221,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <!-- /.container-fluid -->
 
@@ -224,7 +229,7 @@
 
             <!-- Footer -->
             <%- include('../includes/footer') %>
-            <!-- End of Footer -->
+                <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->

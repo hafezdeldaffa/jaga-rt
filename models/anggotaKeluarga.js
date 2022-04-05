@@ -21,7 +21,7 @@ const anggotaKeluargaSchema = new Schema(
     },
     tokenRT: {
       type: Schema.Types.ObjectId,
-      ref: 'RT',
+      ref: 'Keluarga',
       required: true,
     },
     keluargaId: {

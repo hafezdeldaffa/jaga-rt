@@ -12,6 +12,7 @@ const {
   getTambahAnggotaForm,
   getTambahLaporanForm,
   getEditLaporanForm,
+  getDetailLaporanForm,
 } = require("../controllers/form");
 
 /* GET home page. */
@@ -39,9 +40,10 @@ router.get("/masyarakat", getMasyarakatDashboard);
 router.get("/editAnggota/:id", getEditAnggotaForm);
 router.get("/tambahAnggota", getTambahAnggotaForm);
 
-/* Get Add, Edit, Delete, & Detail Laporan Form */
+/* Get Add, Edit, & Detail Laporan Form */
 router.get("/tambahLaporanForm/:id", getTambahLaporanForm);
 router.get("/editLaporanForm/:id", getEditLaporanForm);
+router.get("/detailLaporanForm/:id", getDetailLaporanForm);
 
 /* Get Chart Data & Show on Dashboard */
 router.get("/piechartData", pieChart);
