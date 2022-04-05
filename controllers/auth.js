@@ -1,34 +1,8 @@
-/* 
-    CONTROLLERS UNTUK AUTHENTICATE JWT
-*/
-
-const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const Keluarga = require('../models/keluarga');
 const { errorHandling } = require('./errorHandling');
-const LocalStorage = require('node-localstorage').LocalStorage;
-const localStorage = new LocalStorage('./scratch');
-
-exports.authenticateJWT = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (authHeader) {
-    const token = authHeader.split(' ')[1];
-
-    jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-
-      req.user = user;
-      next();
-    });
-  } else {
-    res.sendStatus(401);
-  }
-};
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -124,28 +98,15 @@ exports.login = async (req, res, next) => {
         throw error;
       }
 
-      const token = jwt.sign(
-        {
-          email: user.email,
-          password: user.password,
-          role: user.role,
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: '3h' }
-      );
-
-      localStorage.setItem('token', token);
-
-      const fixedToken = localStorage.getItem('token');
-      console.log(fixedToken);
-
-      if (fixedToken) {
-        res.redirect('/dashboard');
+      if (truePassword) {
+        req.session.isLoggedIn = true;
+        req.session.user = user;
+        return req.session.save((err) => {
+          console.log(err);
+          res.redirect('/dashboard');
+        });
       }
-
-      next();
-    } 
-    else if (role === 'RT') {
+    } else if (role === 'RT') {
       const rt = await Keluarga.findOne({ email: email });
 
       if (!rt) {
@@ -163,28 +124,14 @@ exports.login = async (req, res, next) => {
         throw error;
       }
 
-      const token = jwt.sign(
-        {
-          email: user.email,
-          password: user.password,
-          role: user.role,
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: '3h' }
-      );
-
-      localStorage.setItem('token', token);
-
-      const fixedToken = localStorage.getItem('token');
-      console.log(fixedToken);
-
-      if (fixedToken) {
-        res.redirect('/dashboard');
+      if (truePassword) {
+        req.session.isLoggedIn = true;
+        req.session.user = user;
+        return req.session.save((err) => {
+          console.log(err);
+          res.redirect('/dashboard');
+        });
       }
-
-      next();
-    } else {
-      next();
     }
   } catch (error) {
     errorHandling(error);
@@ -193,28 +140,15 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = async (req, res, next) => {
-  localStorage.removeItem('token');
-  res.redirect('/');
+  req.session.destroy((err) => {
+    console.log(err);
+    res.redirect('/');
+  });
 };
 
-exports.checkUser = (req, res, next) => {
-  const token = localStorage.getItem('token');
-
-  if (token) {
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        res.user = null;
-        next();
-      } else if (decodedToken.role === 'RT') {
-        res.rt = decodedToken;
-        next();
-      } else {
-        res.keluarga = decodedToken;
-        next();
-      }
-    });
-  } else {
-    res.user = null;
-    next();
+exports.isAuth = async (req, res, next) => {
+  if (!req.session.isLoggedIn) {
+    return res.redirect('/login');
   }
+  next();
 };

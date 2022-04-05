@@ -1,185 +1,165 @@
-const LocalStorage = require("node-localstorage").LocalStorage;
-const localstorage = new LocalStorage("./scratch");
-const jwt = require("jsonwebtoken");
-const Keluarga = require("../models/keluarga");
-const AnggotaKeluarga = require("../models/anggotaKeluarga");
-const Laporan = require("../models/laporan");
+const LocalStorage = require('node-localstorage').LocalStorage;
+const localstorage = new LocalStorage('./scratch');
+const jwt = require('jsonwebtoken');
+const Keluarga = require('../models/keluarga');
+const AnggotaKeluarga = require('../models/anggotaKeluarga');
+const Laporan = require('../models/laporan');
+const { errorHandling } = require('./errorHandling');
 
 exports.getEditAnggotaForm = async (req, res, next) => {
-  /* Get data from localStorage */
-  const token = localstorage.getItem("token");
-  const { id } = req.params;
+  try {
+    /* Get data from session */
+    const user = req.session.user;
+    const { id } = req.params;
 
-  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-    if (err) {
-      errorHandling(err);
+    if (user.role === 'Keluarga') {
+      const keluarga = await Keluarga.findOne({ email: user.email });
+      const anggotaKeluarga = await AnggotaKeluarga.findById(id);
+
+      res.render('forms/editAnggotaForm', {
+        title: 'Edit Anggota Keluarga',
+        keluarga,
+        anggotaKeluarga,
+      });
     }
 
-    if (!decodedToken) {
-      res.render("index");
-    } else {
-      if (decodedToken.role === "Keluarga") {
-        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-        const anggotaKeluarga = await AnggotaKeluarga.findById(id);
+    if (user.role === 'RT') {
+      const keluarga = await Keluarga.findOne({ email: user.email });
+      const anggotaKeluarga = await AnggotaKeluarga.findById(id);
 
-        res.render("forms/editAnggotaForm", {
-          title: "Edit Anggota Keluarga",
-          keluarga,
-          anggotaKeluarga,
-        });
-      }
-
-      if (decodedToken.role === "RT") {
-        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-        const anggotaKeluarga = await AnggotaKeluarga.findById(id);
-
-        res.render("forms/editAnggotaForm", {
-          title: "Edit Anggota Keluarga",
-          keluarga,
-          anggotaKeluarga,
-        });
-      }
+      res.render('forms/editAnggotaForm', {
+        title: 'Edit Anggota Keluarga',
+        keluarga,
+        anggotaKeluarga,
+      });
     }
 
-    res.render("index");
-  });
+    res.render('index');
+  } catch (error) {
+    errorHandling(error);
+    throw error;
+  }
 };
 
 exports.getTambahAnggotaForm = async (req, res, next) => {
-  /* Get data from localStorage */
-  const token = localstorage.getItem("token");
+  try {
+    /* Get data from session */
+    const user = req.session.user;
 
-  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-    if (err) {
-      errorHandling(err);
+    if (user.role === 'Keluarga') {
+      const keluarga = await Keluarga.findOne({ email: user.email });
+
+      res.render('forms/tambahAnggotaForm', {
+        title: 'Tambah Anggota Keluarga',
+        keluarga,
+      });
     }
+    if (user.role === 'RT') {
+      const keluarga = await Keluarga.findOne({
+        email: user.email,
+      });
 
-    if (!decodedToken) {
-      res.render("index");
-    } else {
-      if (decodedToken.role === "Keluarga") {
-        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-
-        res.render("forms/tambahAnggotaForm", {
-          title: "Tambah Anggota Keluarga",
-          keluarga,
-        });
-      }
-      if (decodedToken.role === "RT") {
-        const keluarga = await Keluarga.findOne({
-          email: decodedToken.email,
-        });
-
-        res.render("forms/tambahAnggotaForm", {
-          title: "Tambah Anggota Keluarga",
-          keluarga,
-        });
-      }
+      res.render('forms/tambahAnggotaForm', {
+        title: 'Tambah Anggota Keluarga',
+        keluarga,
+      });
     }
-
-    res.render("index");
-  });
+    res.render('index');
+  } catch (error) {
+    errorHandling(error);
+    throw error;
+  }
 };
 
 exports.getTambahLaporanForm = async (req, res, next) => {
-  /* Get data from localStorage */
-  const token = localstorage.getItem("token");
-  const { id } = req.params;
+  try {
+    /* Get data from session */
+    const user = req.session.user;
 
-  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-    if (err) {
-      errorHandling(err);
-    }
+    const { id } = req.params;
 
-    if (!decodedToken) {
-      res.render("index");
-    } else {
-      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-      const anggotaKeluarga = await AnggotaKeluarga.findOne({
-        _id: id,
-        keluargaId: keluarga._id,
-        statusCovid: "Positif",
-      }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
+    const keluarga = await Keluarga.findOne({ email: user.email });
+    const anggotaKeluarga = await AnggotaKeluarga.findOne({
+      _id: id,
+      keluargaId: keluarga._id,
+      statusCovid: 'Positif',
+    }).populate('keluargaId', 'namaKepalaKeluarga nomorRumah');
+    const laporan = await Laporan.findOne({
+      anggotaId: id,
+      keluargaId: keluarga._id,
+    });
 
-      res.render("forms/tambahLaporanForm", {
-        title: "Tambah Laporan Keluarga",
-        keluarga,
-        anggotaKeluarga,
-      });
-    }
-
-    res.render("index");
-  });
+    res.render('forms/tambahLaporanForm', {
+      title: 'Tambah Laporan Keluarga',
+      keluarga,
+      anggotaKeluarga,
+      laporan,
+    });
+    res.render('index');
+  } catch (error) {
+    errorHandling(error);
+    throw error;
+  }
 };
 
 exports.getEditLaporanForm = async (req, res, next) => {
-  /* Get data from localStorage */
-  const token = localstorage.getItem("token");
-  const { id } = req.params;
+  try {
+    /* Get data from session */
+    const user = req.session.user;
 
-  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-    if (err) {
-      errorHandling(err);
-    }
+    const { id } = req.params;
 
-    if (!decodedToken) {
-      res.render("index");
-    } else {
-      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-      const anggotaKeluarga = await AnggotaKeluarga.findOne({
-        _id: id,
-        keluargaId: keluarga._id,
-        statusCovid: "Positif",
-      }).populate("keluargaId", "namaKepalaKeluarga nomorRumah");
+    const keluarga = await Keluarga.findOne({ email: user.email });
+    const anggotaKeluarga = await AnggotaKeluarga.findOne({
+      _id: id,
+      keluargaId: keluarga._id,
+      statusCovid: 'Positif',
+    }).populate('keluargaId', 'namaKepalaKeluarga nomorRumah');
 
-      const laporan = await Laporan.findOne({
-        anggotaId: id,
-        keluargaId: keluarga._id,
-      });
+    const laporan = await Laporan.findOne({
+      anggotaId: id,
+      keluargaId: keluarga._id,
+    });
 
-      res.render("forms/editLaporanForm", {
-        title: "Edit Laporan Keluarga",
-        keluarga,
-        anggotaKeluarga,
-        laporan,
-      });
-    }
-
-    res.render("index");
-  });
+    res.render('forms/editLaporanForm', {
+      title: 'Edit Laporan Keluarga',
+      keluarga,
+      anggotaKeluarga,
+      laporan,
+    });
+    res.render('index');
+  } catch (error) {
+    errorHandling(error);
+    throw error;
+  }
 };
 
 exports.getDetailLaporanForm = async (req, res, next) => {
-  /* Get data from localStorage */
-  const token = localstorage.getItem("token");
-  const { id } = req.params;
+  try {
+    /* Get data from session */
+    const user = req.session.user;
 
-  jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-    if (err) {
-      errorHandling(err);
-    }
+    const { id } = req.params;
 
-    if (!decodedToken) {
-      res.render("index");
-    } else {
-      const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-      const anggotaKeluarga = await AnggotaKeluarga.findOne({
-        _id: id,
-        statusCovid: "Positif",
-      });
+    const keluarga = await Keluarga.findOne({ email: user.email });
+    const anggotaKeluarga = await AnggotaKeluarga.findOne({
+      _id: id,
+      statusCovid: 'Positif',
+    });
 
-      const laporan = await Laporan.findOne({
-        anggotaId: id,
-      });
+    const laporan = await Laporan.findOne({
+      anggotaId: id,
+    });
 
-      res.render("forms/detailLaporanForm", {
-        title: "Edit Laporan Keluarga",
-        keluarga,
-        anggotaKeluarga,
-        laporan,
-      });
-    }
-
-    res.render("index");
-  });
+    res.render('forms/detailLaporanForm', {
+      title: 'Edit Laporan Keluarga',
+      keluarga,
+      anggotaKeluarga,
+      laporan,
+    });
+    res.render('index');
+  } catch (error) {
+    errorHandling(error);
+    throw error;
+  }
 };

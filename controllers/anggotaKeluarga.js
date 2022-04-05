@@ -2,9 +2,6 @@ const AnggotaKeluarga = require('../models/anggotaKeluarga');
 const Keluarga = require('../models/keluarga');
 const { errorHandling } = require('./errorHandling');
 const { validationResult } = require('express-validator');
-const LocalStorage = require('node-localstorage').LocalStorage;
-const localstorage = new LocalStorage('./scratch');
-const jwt = require('jsonwebtoken');
 
 exports.addAnggotaKeluarga = async (req, res, next) => {
   try {
@@ -16,52 +13,46 @@ exports.addAnggotaKeluarga = async (req, res, next) => {
       throw err;
     }
 
-    const token = localstorage.getItem('token');
+    /* Get data from session */
+    const user = req.session.user;
+
     const { nama, statusCovid, role } = req.body;
 
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        errorHandling(err);
-      }
+    if (user.role === 'Keluarga') {
+      const keluarga = await Keluarga.findOne({
+        email: user.email,
+      });
+      const newAnggota = new AnggotaKeluarga({
+        nama: nama,
+        role: role,
+        statusCovid: statusCovid,
+        keluargaId: keluarga._id,
+        tokenRT: keluarga.tokenRT,
+      });
 
-      if (!decodedToken) {
-        res.render('index');
-      } else {
-        if (decodedToken.role === 'Keluarga') {
-          const keluarga = await Keluarga.findOne({
-            email: decodedToken.email,
-          });
-          const newAnggota = new AnggotaKeluarga({
-            nama: nama,
-            role: role,
-            statusCovid: statusCovid,
-            keluargaId: keluarga._id,
-            tokenRT: keluarga.tokenRT,
-          });
+      await newAnggota.save();
 
-          await newAnggota.save();
+      res.redirect('/keluarga');
+    }
 
-          res.redirect('/keluarga');
-        }
+    if (user.role === 'RT') {
+      const keluarga = await Keluarga.findOne({
+        email: user.email,
+      });
+      const newAnggota = new AnggotaKeluarga({
+        nama: nama,
+        role: role,
+        statusCovid: statusCovid,
+        keluargaId: keluarga._id,
+        tokenRT: keluarga._id,
+      });
 
-        if (decodedToken.role === 'RT') {
-          const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-          const newAnggota = new AnggotaKeluarga({
-            nama: nama,
-            role: role,
-            statusCovid: statusCovid,
-            keluargaId: keluarga._id,
-            tokenRT: keluarga._id,
-          });
+      await newAnggota.save();
 
-          await newAnggota.save();
+      res.redirect('/keluarga');
+    }
 
-          res.redirect('/keluarga');
-        }
-      }
-
-      res.render('index');
-    });
+    res.render('index');
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);
@@ -79,57 +70,49 @@ exports.editAnggotaKeluarga = async (req, res, next) => {
       throw err;
     }
 
-    const token = localstorage.getItem('token');
+    /* Get data from session */
+    const user = req.session.user;
+
     const { id } = req.params;
     const { nama, statusCovid, role } = req.body;
 
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        errorHandling(err);
-      }
+    if (user.role === 'Keluarga') {
+      const keluarga = await Keluarga.findOne({
+        email: user.email,
+      });
+      const newAnggota = {
+        nama: nama,
+        role: role,
+        statusCovid: statusCovid,
+        keluargaId: keluarga._id,
+        tokenRT: keluarga.tokenRT,
+      };
 
-      if (!decodedToken) {
-        res.render('index');
-      } else {
-        if (decodedToken.role === 'Keluarga') {
-          const keluarga = await Keluarga.findOne({
-            email: decodedToken.email,
-          });
-          const newAnggota = {
-            nama: nama,
-            role: role,
-            statusCovid: statusCovid,
-            keluargaId: keluarga._id,
-            tokenRT: keluarga.tokenRT,
-          };
+      await AnggotaKeluarga.findByIdAndUpdate(id, newAnggota);
 
-          await AnggotaKeluarga.findByIdAndUpdate(id, newAnggota);
+      res.redirect('/keluarga');
+    }
 
-          res.redirect('/keluarga');
-        }
+    if (user.role === 'RT') {
+      const keluarga = await Keluarga.findOne({
+        email: user.email,
+      });
+      const newAnggota = {
+        nama: nama,
+        role: role,
+        statusCovid: statusCovid,
+        keluargaId: keluarga._id,
+        tokenRT: keluarga._id,
+      };
 
-        if (decodedToken.role === 'RT') {
-          const keluarga = await Keluarga.findOne({
-            email: decodedToken.email,
-          });
-          const newAnggota = {
-            nama: nama,
-            role: role,
-            statusCovid: statusCovid,
-            keluargaId: keluarga._id,
-            tokenRT: keluarga._id,
-          };
+      console.log(newAnggota);
 
-          console.log(newAnggota);
+      await AnggotaKeluarga.findByIdAndUpdate(id, newAnggota);
 
-          await AnggotaKeluarga.findByIdAndUpdate(id, newAnggota);
+      res.redirect('/keluarga');
+    }
 
-          res.redirect('/keluarga');
-        }
-      }
-
-      res.render('index');
-    });
+    res.render('index');
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);
@@ -139,24 +122,16 @@ exports.editAnggotaKeluarga = async (req, res, next) => {
 
 exports.deleteAnggotaKeluarga = async (req, res, next) => {
   try {
-    const token = localstorage.getItem('token');
+    /* Get data from session */
+    const user = req.session.user;
     const { id } = req.params;
 
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        errorHandling(err);
-      }
+    if (user) {
+      await AnggotaKeluarga.findByIdAndDelete(id);
+      res.redirect('/keluarga');
+    }
 
-      if (!decodedToken) {
-        res.render('index');
-      } else {
-        await AnggotaKeluarga.findByIdAndDelete(id);
-
-        res.redirect('/keluarga');
-      }
-
-      res.render('index');
-    });
+    res.render('index');
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);
