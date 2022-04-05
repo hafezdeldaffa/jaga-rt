@@ -115,28 +115,23 @@ exports.getLaporanDashboard = async (req, res, next) => {
       if (decodedToken.role === "Keluarga") {
         const keluarga = await Keluarga.findOne({ email: decodedToken.email });
         const anggotaPositif = await AnggotaKeluarga.find({
-          tokenRT: keluarga.tokenRT,
+          keluargaId: keluarga._id,
           statusCovid: "Positif",
-          jwt: token,
-        });
+        }).populate('keluargaId', 'namaKepalaKeluarga nomorRumah');
 
         res.render("dashboard/laporan", {
           title: "Dashboard Laporan",
           keluarga,
           anggotaPositif,
         });
-        /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-            res.user = keluarga;
-            next(); */
       }
 
       if (decodedToken.role === "RT") {
         const keluarga = await Keluarga.findOne({ email: decodedToken.email });
         const anggotaPositif = await AnggotaKeluarga.find({
-          tokenRT: keluarga._id,
+          keluargaId: keluarga._id,
           statusCovid: "Positif",
-          jwt: token,
-        });
+        }).populate('keluargaId', 'namaKepalaKeluarga nomorRumah');
 
         res.render("dashboard/laporan", {
           title: "Dashboard Laporan",
