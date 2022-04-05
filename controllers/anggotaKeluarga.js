@@ -2,7 +2,6 @@ const AnggotaKeluarga = require('../models/anggotaKeluarga');
 const Keluarga = require('../models/keluarga');
 const { errorHandling } = require('./errorHandling');
 const { validationResult } = require('express-validator');
-const RT = require('../models/rt');
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localstorage = new LocalStorage('./scratch');
 const jwt = require('jsonwebtoken');
@@ -46,7 +45,7 @@ exports.addAnggotaKeluarga = async (req, res, next) => {
         }
 
         if (decodedToken.role === 'RT') {
-          const keluarga = await RT.findOne({ email: decodedToken.email });
+          const keluarga = await Keluarga.findOne({ email: decodedToken.email });
           const newAnggota = new AnggotaKeluarga({
             nama: nama,
             role: role,
@@ -170,7 +169,7 @@ exports.editAnggotaKeluarga = async (req, res, next) => {
         }
 
         if (decodedToken.role === 'RT') {
-          const keluarga = await RT.findOne({
+          const keluarga = await Keluarga.findOne({
             email: decodedToken.email,
           });
           const newAnggota = {

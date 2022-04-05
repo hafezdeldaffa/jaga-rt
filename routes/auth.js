@@ -3,7 +3,6 @@ const { signUp, login, logout } = require('../controllers/auth');
 const router = express.Router();
 const { body } = require('express-validator');
 const Keluarga = require('../models/keluarga');
-const Rt = require('../models/rt');
 
 router.post(
   '/signup',
@@ -21,7 +20,7 @@ router.post(
             }
           });
         } else {
-          return Rt.findOne({ email: value }).then((rt) => {
+          return Keluarga.findOne({ email: value }).then((rt) => {
             if (rt) {
               return new Promise.reject(
                 'E-Mail sudah terdaftar, harap gunakan email lain!'

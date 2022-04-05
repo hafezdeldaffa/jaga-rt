@@ -1,6 +1,5 @@
 const Keluarga = require("../models/keluarga");
 const AnggotaKeluarga = require("../models/anggotaKeluarga");
-const Rt = require("../models/rt");
 const { errorHandling } = require("./errorHandling");
 const LocalStorage = require("node-localstorage").LocalStorage;
 const localstorage = new LocalStorage("./scratch");
@@ -36,7 +35,7 @@ exports.getDashboard = async (req, res, next) => {
       }
 
       if (decodedToken.role === "RT") {
-        const keluarga = await Rt.findOne({ email: decodedToken.email });
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
         const anggotaPositif = await AnggotaKeluarga.find({
           tokenRT: keluarga._id,
           statusCovid: "Positif",
@@ -73,18 +72,17 @@ exports.getAnggotaDashboard = async (req, res, next) => {
           keluargaId: keluarga._id,
         });
 
+        console.log(req.user);
+
         res.render("dashboard/anggotaKeluarga", {
           title: "Dashboard Anggota Keluarga",
           keluarga,
           anggotaKeluarga,
         });
-        /* const keluarga = await Keluarga.findOne({ email: decodedToken.email });
-            res.user = keluarga;
-            next(); */
       }
 
       if (decodedToken.role === "RT") {
-        const keluarga = await Rt.findOne({ email: decodedToken.email });
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
         const anggotaKeluarga = await AnggotaKeluarga.find({
           tokenRT: keluarga._id,
           keluargaId: keluarga._id,
@@ -133,7 +131,7 @@ exports.getLaporanDashboard = async (req, res, next) => {
       }
 
       if (decodedToken.role === "RT") {
-        const keluarga = await Rt.findOne({ email: decodedToken.email });
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
         const anggotaPositif = await AnggotaKeluarga.find({
           tokenRT: keluarga._id,
           statusCovid: "Positif",
@@ -185,11 +183,13 @@ exports.getMasyarakatDashboard = async (req, res, next) => {
       res.render("index");
     } else {
       if (decodedToken.role === "RT") {
-        const keluarga = await Rt.findOne({ email: decodedToken.email });
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
         const masyarakatPositif = await AnggotaKeluarga.find({
           tokenRT: keluarga._id,
           statusCovid: "Positif",
         }).populate("keluargaId", "namaKepalaKeluarga rt alamat nomorRumah");
+
+        console.log(masyarakatPositif);
 
         res.render("dashboard/masyarakatPositif", {
           title: "Dashboard Masyarakat Positif",
@@ -228,7 +228,7 @@ exports.getEditAnggotaForm = async (req, res, next) => {
       }
 
       if (decodedToken.role === "RT") {
-        const keluarga = await Rt.findOne({ email: decodedToken.email });
+        const keluarga = await Keluarga.findOne({ email: decodedToken.email });
         const anggotaKeluarga = await AnggotaKeluarga.findById(id);
 
         res.render("forms/editAnggotaForm", {
@@ -265,7 +265,7 @@ exports.getTambahAnggotaForm = async (req, res, next) => {
         });
       }
       if (decodedToken.role === "RT") {
-        const keluarga = await Rt.findOne({
+        const keluarga = await Keluarga.findOne({
           email: decodedToken.email,
         });
 

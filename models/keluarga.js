@@ -49,7 +49,6 @@ const keluargaSchema = new Schema(
     },
     tokenRT: {
       type: String,
-      required: true,
     }
   },
   { timestamps: true }

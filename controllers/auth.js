@@ -7,7 +7,6 @@ const { validationResult } = require('express-validator');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const Keluarga = require('../models/keluarga');
-const Rt = require('../models/rt');
 const { errorHandling } = require('./errorHandling');
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./scratch');
@@ -73,11 +72,11 @@ exports.signUp = async (req, res, next) => {
 
       await keluarga.save();
 
-      const findKeluarga = Keluarga.findOne({ email: keluarga.email });
+      req.keluarga = await Keluarga.findOne({ email: keluarga.email });
 
       res.status(201).redirect('/login');
     } else {
-      const dataRt = new Rt({
+      const dataRt = new Keluarga({
         namaKepalaKeluarga: namaKepalaKeluarga,
         email: email,
         provinsi: provinsi,
@@ -92,7 +91,7 @@ exports.signUp = async (req, res, next) => {
 
       await dataRt.save();
 
-      const findRt = Rt.findOne({ email: dataRt.email });
+      req.keluarga = await Keluarga.findOne({ email: dataRt.email });
 
       res.status(201).redirect('/login');
     }
@@ -147,7 +146,7 @@ exports.login = async (req, res, next) => {
       next();
     } 
     else if (role === 'RT') {
-      const rt = await Rt.findOne({ email: email });
+      const rt = await Keluarga.findOne({ email: email });
 
       if (!rt) {
         const error = new Error('Wrong data. Please check your login data!');
