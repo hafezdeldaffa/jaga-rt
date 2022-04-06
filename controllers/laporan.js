@@ -1,49 +1,37 @@
-const AnggotaKeluarga = require("../models/anggotaKeluarga");
-const Keluarga = require("../models/keluarga");
-const { errorHandling } = require("./errorHandling");
-const { validationResult } = require("express-validator");
-const Laporan = require("../models/laporan");
-const LocalStorage = require("node-localstorage").LocalStorage;
-const localstorage = new LocalStorage("./scratch");
-const jwt = require("jsonwebtoken");
+const AnggotaKeluarga = require('../models/anggotaKeluarga');
+const { errorHandling } = require('./errorHandling');
+const { validationResult } = require('express-validator');
+const Laporan = require('../models/laporan');
 
 exports.addLaporan = async (req, res, next) => {
   try {
     /* Creating validation */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error("Validation error, entered data is incorrect");
+      const error = new Error('Validation error, entered data is incorrect');
       error.statusCode = 422;
       throw err;
     }
 
-    const token = localstorage.getItem("token");
+    /* Get data from session */
+    const user = req.session.user;
+
     const { id } = req.params;
     const { laporan, catatan } = req.body;
 
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        errorHandling(err);
-      }
-
-      if (!decodedToken) {
-        res.render("index");
-      } else {
-        const anggota = await AnggotaKeluarga.findById(id);
-        const newLaporan = await new Laporan({
-          anggotaId: anggota._id,
-          keluargaId: anggota.keluargaId,
-          laporan: laporan,
-          catatan: catatan,
-        });
-
-        await newLaporan.save();
-
-        res.redirect("/laporan");
-      }
-
-      res.render("index");
+    const anggota = await AnggotaKeluarga.findById(id);
+    const newLaporan = await new Laporan({
+      anggotaId: anggota._id,
+      keluargaId: anggota.keluargaId,
+      laporan: laporan,
+      catatan: catatan,
     });
+
+    if (user) {
+      await newLaporan.save();
+    }
+
+    res.redirect('/laporan');
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);
@@ -56,54 +44,45 @@ exports.editLaporan = async (req, res, next) => {
     /* Creating validation */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error("Validation error, entered data is incorrect");
+      const error = new Error('Validation error, entered data is incorrect');
       error.statusCode = 422;
       throw err;
     }
 
-    const token = localstorage.getItem("token");
+    /* Get data from session */
+    const user = req.session.user;
+
     const { id } = req.params;
     const { idAnggota, laporan, catatan } = req.body;
 
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        errorHandling(err);
-      }
+    if (user.role === 'Keluarga') {
+      const anggota = await AnggotaKeluarga.findById(idAnggota);
+      const newLaporan = {
+        anggotaId: anggota._id,
+        keluargaId: anggota.keluargaId,
+        laporan: laporan,
+        catatan: catatan,
+      };
 
-      if (!decodedToken) {
-        res.render("index");
-      } else {
-        if (decodedToken.role === "Keluarga") {
-          const anggota = await AnggotaKeluarga.findById(idAnggota);
-          const newLaporan = {
-            anggotaId: anggota._id,
-            keluargaId: anggota.keluargaId,
-            laporan: laporan,
-            catatan: catatan,
-          };
+      await Laporan.findOneAndReplace(id, newLaporan);
 
-          await Laporan.findOneAndReplace(id, newLaporan);
+      res.redirect('/laporan');
+    }
 
-          res.redirect("/laporan");
-        }
+    if (user.role === 'RT') {
+      const anggota = await AnggotaKeluarga.findById(idAnggota);
+      console.log(anggota);
+      const newLaporan = {
+        anggotaId: anggota._id,
+        keluargaId: anggota.keluargaId,
+        laporan: laporan,
+        catatan: catatan,
+      };
 
-        if (decodedToken.role === "RT") {
-          const anggota = await AnggotaKeluarga.findById(id);
-          const newLaporan = {
-            anggotaId: anggota._id,
-            keluargaId: anggota.keluargaId,
-            laporan: laporan,
-            catatan: catatan,
-          };
+      await Laporan.findOneAndReplace(id, newLaporan);
 
-          await Laporan.findOneAndReplace(id, newLaporan);
-
-          res.redirect("/laporan");
-        }
-      }
-
-      res.render("index");
-    });
+      res.redirect('/laporan');
+    }
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);
@@ -113,24 +92,17 @@ exports.editLaporan = async (req, res, next) => {
 
 exports.deleteLaporan = async (req, res, next) => {
   try {
-    const token = localstorage.getItem("token");
+    /* Get data from session */
+    const user = req.session.user;
+
     const { id } = req.params;
 
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        errorHandling(err);
-      }
-
-      if (!decodedToken) {
-        res.render("index");
-      } else {
-        await Laporan.findByIdAndDelete(id);
-
-        res.redirect("/laporan");
-      }
-
-      res.render("index");
-    });
+    if (!user) {
+      res.render('index');
+    } else {
+      await Laporan.findByIdAndDelete(id);
+      res.redirect('/laporan');
+    }
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);

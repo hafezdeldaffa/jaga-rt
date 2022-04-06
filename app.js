@@ -5,6 +5,16 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
+require('dotenv').config();
+
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URI,
+  collection: 'sessions',
+  expires: 10800000,
+  databaseName: 'jagart',
+});
 
 const indexRouter = require('./routes/index');
 const auth = require('./routes/auth');
@@ -24,6 +34,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet());
 app.use(cors());
+app.use(
+  session({
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
+);
 
 app.use('/', indexRouter);
 app.use(auth);

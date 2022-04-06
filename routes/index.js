@@ -13,7 +13,9 @@ const {
   getTambahLaporanForm,
   getEditLaporanForm,
   getDetailLaporanForm,
+  getProfile,
 } = require("../controllers/form");
+const { isAuth } = require("../controllers/auth");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -29,21 +31,23 @@ router.get("/signup", function (req, res, next) {
 });
 
 /* Get Dashboard, Keluarga, & Laporan routes */
-router.get("/dashboard", getDashboard);
-router.get("/keluarga", getAnggotaDashboard);
-router.get("/laporan", getLaporanDashboard);
+router.get("/dashboard", isAuth, getDashboard);
+router.get("/keluarga", isAuth, getAnggotaDashboard);
+router.get("/laporan", isAuth, getLaporanDashboard);
 
 /* Get Masyarakat Positif Dashboard */
-router.get("/masyarakat", getMasyarakatDashboard);
+router.get("/masyarakat", isAuth, getMasyarakatDashboard);
 
 /* Get Edit & Add AnggotaKeluarga Form */
-router.get("/editAnggota/:id", getEditAnggotaForm);
-router.get("/tambahAnggota", getTambahAnggotaForm);
+router.get("/editAnggota/:id", isAuth, getEditAnggotaForm);
+router.get("/tambahAnggota", isAuth, getTambahAnggotaForm);
 
 /* Get Add, Edit, & Detail Laporan Form */
-router.get("/tambahLaporanForm/:id", getTambahLaporanForm);
-router.get("/editLaporanForm/:id", getEditLaporanForm);
-router.get("/detailLaporanForm/:id", getDetailLaporanForm);
+router.get("/tambahLaporanForm/:id", isAuth, getTambahLaporanForm);
+router.get("/editLaporanForm/:id", isAuth, getEditLaporanForm);
+router.get("/detailLaporanForm/:id", isAuth, getDetailLaporanForm);
+
+router.get("/profile/:id", isAuth, getProfile);
 
 /* Get Chart Data & Show on Dashboard */
 router.get("/piechartData", pieChart);
