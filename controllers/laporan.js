@@ -29,19 +29,17 @@ exports.addLaporan = async (req, res, next) => {
       if (!decodedToken) {
         res.render("index");
       } else {
-        
-          const anggota = await AnggotaKeluarga.findById(id);
-          const newLaporan = await new Laporan({
-            anggotaId: anggota._id,
-            keluargaId: anggota.keluargaId,
-            laporan: laporan,
-            catatan: catatan,
-          });
+        const anggota = await AnggotaKeluarga.findById(id);
+        const newLaporan = await new Laporan({
+          anggotaId: anggota._id,
+          keluargaId: anggota.keluargaId,
+          laporan: laporan,
+          catatan: catatan,
+        });
 
-          await newLaporan.save();
+        await newLaporan.save();
 
-          res.redirect("/laporan");
-        
+        res.redirect("/laporan");
       }
 
       res.render("index");

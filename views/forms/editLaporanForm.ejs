@@ -146,35 +146,39 @@
                         </div>
                         <div class="card-body">
                             <% if (!laporan) { %>
-                             <label for="kosong">Tidak Ada Data Laporan</label>
-                            <% } else { %>
-                                <form class="user" action="/editLaporan/<%= laporan._id %> " method="post">
-                                    <div class="form-group">
-                                        <input disabled type="text" class="form-control" value="<%= anggotaKeluarga.nama %>"
-                                            placeholder="Nama Anggota Keluarga" />
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="hidden" name="idAnggota" class="form-control"
-                                            value="<%= anggotaKeluarga._id %>" placeholder="Nama Anggota Keluarga" />
-                                    </div>
-                                    <div class="form-group">
-                                        <input disabled type="text" class="form-control" value="<%= anggotaKeluarga.role %>"
-                                            placeholder="Role Anggota Keluarga" />
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea class="form-control" required name="laporan" id="laporan" cols="30"
-                                            rows="5"
-                                            placeholder="Tuliskan Laporan Terkait Kondisi Anda"><%= laporan.laporan %> </textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea class="form-control" name="catatan" id="catatan" cols="30" rows="5"
-                                            placeholder="Tuliskan Catatan Tambahan (Apa yang anda butuhkan ?)"><%= laporan.catatan %> </textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-user btn-block">
-                                        Edit Laporan
-                                    </button>
-                                </form>
-                            <% } %>
+                                <label for="kosong">Tidak Ada Data Laporan</label>
+                                <% } else { %>
+                                    <form class="user" action="/editLaporan/<%= laporan._id %> " method="post">
+                                        <div class="form-group">
+                                            <input disabled type="text" class="form-control"
+                                                value="<%= anggotaKeluarga.nama %>"
+                                                placeholder="Nama Anggota Keluarga" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="hidden" name="idAnggota" class="form-control"
+                                                value="<%= anggotaKeluarga._id %>"
+                                                placeholder="Nama Anggota Keluarga" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input disabled type="text" class="form-control"
+                                                value="<%= anggotaKeluarga.role %>"
+                                                placeholder="Role Anggota Keluarga" />
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea class="form-control" required name="laporan" id="laporan"
+                                                cols="30" rows="5"
+                                                placeholder="Tuliskan Laporan Terkait Kondisi Anda"><%= laporan.laporan %> </textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea class="form-control" name="catatan" id="catatan" cols="30"
+                                                rows="5"
+                                                placeholder="Tuliskan Catatan Tambahan (Apa yang anda butuhkan ?)"><%= laporan.catatan %> </textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            Edit Laporan
+                                        </button>
+                                    </form>
+                                    <% } %>
                         </div>
                     </div>
                 </div>
