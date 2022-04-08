@@ -1,43 +1,43 @@
-const express = require('express');
-const { signUp, login, logout } = require('../controllers/auth');
+const express = require("express");
+const { signUp, login, logout } = require("../controllers/auth");
 const router = express.Router();
-const { body } = require('express-validator');
-const Keluarga = require('../models/keluarga');
+const { body } = require("express-validator");
+const Keluarga = require("../models/keluarga");
 
 router.post(
-  '/signup',
+  "/signup",
   [
-    body('email')
+    body("email")
       .isEmail()
-      .withMessage('Please add a valid email')
-      .custom((value, { req }) => {
+      .withMessage("Please add a valid email")
+      .custom(async (value, { req }) => {
         if (req.body.tokenRT) {
-          return Keluarga.findOne({ email: value }).then((keluarga) => {
+          return await Keluarga.findOne({ email: value }).then((keluarga) => {
             if (keluarga) {
               return new Promise.reject(
-                'E-Mail sudah terdaftar, harap gunakan email lain!'
+                "E-Mail sudah terdaftar, harap gunakan email lain!"
               );
             }
           });
         } else {
-          return Keluarga.findOne({ email: value }).then((rt) => {
+          return await Keluarga.findOne({ email: value }).then((rt) => {
             if (rt) {
               return new Promise.reject(
-                'E-Mail sudah terdaftar, harap gunakan email lain!'
+                "E-Mail sudah terdaftar, harap gunakan email lain!"
               );
             }
           });
         }
       })
       .normalizeEmail(),
-    body('password').trim().isLength({ min: 8 }),
-    body('role').trim().not().isEmpty(),
+    body("password").trim().isLength({ min: 8 }),
+    body("role").trim().not().isEmpty(),
   ],
   signUp
 );
 
-router.post('/dashboard', login);
+router.post("/dashboard", login);
 
-router.get('/logout', logout);
+router.get("/logout", logout);
 
 module.exports = router;

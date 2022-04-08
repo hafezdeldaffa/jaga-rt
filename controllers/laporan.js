@@ -1,14 +1,14 @@
-const AnggotaKeluarga = require('../models/anggotaKeluarga');
-const { errorHandling } = require('./errorHandling');
-const { validationResult } = require('express-validator');
-const Laporan = require('../models/laporan');
+const AnggotaKeluarga = require("../models/anggotaKeluarga");
+const { errorHandling } = require("./errorHandling");
+const { validationResult } = require("express-validator");
+const Laporan = require("../models/laporan");
 
 exports.addLaporan = async (req, res, next) => {
   try {
     /* Creating validation */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error('Validation error, entered data is incorrect');
+      const error = new Error("Validation error, entered data is incorrect");
       error.statusCode = 422;
       throw err;
     }
@@ -31,7 +31,7 @@ exports.addLaporan = async (req, res, next) => {
       await newLaporan.save();
     }
 
-    res.redirect('/laporan');
+    res.redirect("/laporan");
   } catch (error) {
     /* Handling Errors */
     errorHandling(error);
@@ -44,7 +44,7 @@ exports.editLaporan = async (req, res, next) => {
     /* Creating validation */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error('Validation error, entered data is incorrect');
+      const error = new Error("Validation error, entered data is incorrect");
       error.statusCode = 422;
       throw err;
     }
@@ -55,7 +55,7 @@ exports.editLaporan = async (req, res, next) => {
     const { id } = req.params;
     const { idAnggota, laporan, catatan } = req.body;
 
-    if (user.role === 'Keluarga') {
+    if (user.role === "Keluarga") {
       const anggota = await AnggotaKeluarga.findById(idAnggota);
       const newLaporan = {
         anggotaId: anggota._id,
@@ -66,10 +66,10 @@ exports.editLaporan = async (req, res, next) => {
 
       await Laporan.findOneAndReplace(id, newLaporan);
 
-      res.redirect('/laporan');
+      res.redirect("/laporan");
     }
 
-    if (user.role === 'RT') {
+    if (user.role === "RT") {
       const anggota = await AnggotaKeluarga.findById(idAnggota);
       console.log(anggota);
       const newLaporan = {
@@ -81,7 +81,7 @@ exports.editLaporan = async (req, res, next) => {
 
       await Laporan.findOneAndReplace(id, newLaporan);
 
-      res.redirect('/laporan');
+      res.redirect("/laporan");
     }
   } catch (error) {
     /* Handling Errors */
@@ -98,10 +98,10 @@ exports.deleteLaporan = async (req, res, next) => {
     const { id } = req.params;
 
     if (!user) {
-      res.render('index');
+      res.render("index");
     } else {
       await Laporan.findByIdAndDelete(id);
-      res.redirect('/laporan');
+      res.redirect("/laporan");
     }
   } catch (error) {
     /* Handling Errors */

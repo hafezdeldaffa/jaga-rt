@@ -120,7 +120,7 @@
                             </h6>
                         </div>
                         <div class="card-body">
-                            <form class="user" action="/editkeluarga/<%= keluarga._id %> " method="post">
+                            <form class="user" action="/editProfile/<%= keluarga._id %> " method="post">
                                 <div class="form-group">
                                     <input name="nama" type="text" class="form-control"
                                         value="<%= keluarga.namaKepalaKeluarga%>" placeholder="Nama Kepala Keluarga" />
@@ -159,7 +159,6 @@
                                                 <div class="form-floating">
                                                     <input class="form-control" id="inputLastName" type="number"
                                                         name="rw" placeholder="RW" value="<%= keluarga.rw %>" />
-
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
