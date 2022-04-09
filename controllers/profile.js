@@ -1,5 +1,5 @@
-const Keluarga = require("../models/keluarga");
-const { errorHandling } = require("./errorHandling");
+const Keluarga = require('../models/keluarga');
+const { errorHandling } = require('./errorHandling');
 
 exports.editProfile = async (req, res, next) => {
   try {
@@ -13,13 +13,34 @@ exports.editProfile = async (req, res, next) => {
       email,
       alamat,
       provinsi,
+      tokenRT,
       rt,
       rw,
       nomorRumah,
       kodePos,
+      password,
     } = req.body;
 
-    if (user.role === "Keluarga") {
+    if (user.role === 'Keluarga') {
+      const newKeluarga = {
+        namaKepalaKeluarga: namaKepalaKeluarga,
+        role: role,
+        tokenRT: tokenRT,
+        email: email,
+        alamat: alamat,
+        password: password,
+        provinsi: provinsi,
+        rt: rt,
+        rw: rw,
+        nomorRumah: nomorRumah,
+        kodePos: kodePos,
+      };
+
+      const keluarga = await Keluarga.findByIdAndUpdate(id, newKeluarga);
+      console.log(keluarga);
+
+      res.redirect('/dashboard');
+    } else if (user.role === 'RT') {
       const newKeluarga = {
         namaKepalaKeluarga: namaKepalaKeluarga,
         role: role,
@@ -31,9 +52,9 @@ exports.editProfile = async (req, res, next) => {
         nomorRumah: nomorRumah,
         kodePos: kodePos,
       };
+      await Keluarga.findByIdAndUpdate(id, newKeluarga);
 
-      const keluarga = await Keluarga.findByIdAndUpdate(id, newKeluarga);
-    } else {
+      res.redirect('/dashboard');
     }
   } catch (error) {
     errorHandling(error);

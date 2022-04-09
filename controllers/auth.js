@@ -116,6 +116,7 @@ exports.login = async (req, res, next) => {
       }
 
       user = rt;
+      console.log(user);
       const truePassword = await bcrypt.compare(password, user.password);
 
       if (!truePassword) {
