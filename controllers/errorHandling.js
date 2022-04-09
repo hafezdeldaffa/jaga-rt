@@ -1,5 +1,5 @@
 exports.errorHandling = (err) => {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-  };
+  if (!err.statusCode) {
+    err.statusCode = 500;
+  }
+};
