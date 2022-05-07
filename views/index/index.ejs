@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Jaga-RT</title>
+
+  <!--====== Favicon Icon ======-->
+  <link rel="shortcut icon" href="assets/images/icon-nobg.ico" type="image/svg" />
+
+  <!-- ===== All CSS files ===== -->
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/animate.css" />
+  <link rel="stylesheet" href="assets/css/lineicons.css" />
+  <link rel="stylesheet" href="assets/css/ud-styles.css" />
+</head>
+
+<body>
+  <!-- ====== Header Start ====== -->
+  <header class="ud-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" <% if (user) { %>
+              href="/dashboard"
+              <% } else { %>
+                href="/"
+                <% } %>>
+                  <img src="assets/images/logo/jaga-rt.png" alt="Logo" />
+            </a>
+            <button class="navbar-toggler">
+              <span class="toggler-icon"> </span>
+              <span class="toggler-icon"> </span>
+              <span class="toggler-icon"> </span>
+            </button>
+
+            <div class="navbar-collapse">
+              <ul id="nav" class="navbar-nav mx-auto">
+                <li class="nav-item">
+                  <a class="ud-menu-scroll" href="#home">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="ud-menu-scroll" href="#edukasi">Edukasi</a>
+                </li>
+                <li class="nav-item">
+                  <a class="ud-menu-scroll" href="#features">Tentang</a>
+                </li>
+                <li class="nav-item">
+                  <a class="ud-menu-scroll" href="#faq">FAQ</a>
+                </li>
+                <li class="nav-item">
+                  <a class="ud-menu-scroll" href="#testimonials">Testimoni</a>
+                </li>
+                <li class="nav-item">
+                  <a class="ud-menu-scroll" href="#footer">Kontak</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="navbar-btn d-none d-sm-inline-block">
+              <a <% if (user) { %>
+                href="/dashboard"
+                <% } else { %>
+                  href="/login"
+                  <% } %> class="ud-main-btn ud-login-btn"> <% if (user) { %>
+                      Dashboard
+                      <% } else { %>
+                        Masuk
+                        <% } %>
+              </a>
+              <a class="ud-main-btn ud-white-btn" href="/signup"> Daftar </a>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- ====== Header End ====== -->
+
+  <!-- ====== Hero Start ====== -->
+  <section class="ud-hero" id="home">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="ud-hero-content wow fadeInUp" data-wow-delay=".2s">
+            <h1 class="ud-hero-title">Jaga RT Anda dari Virus Covid-19</h1>
+            <p class="ud-hero-desc">
+              Sebuah platform web yang membantu para masyarakat untuk memantau
+              kasus Virus Covid-19 dalam lingkup RT
+            </p>
+          </div>
+
+          <div class="ud-hero-image wow fadeInUp" data-wow-delay=".25s">
+            <img src="assets/images/hero/small town.svg" alt="hero-image" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== Hero End ====== -->
+
+  <!-- ====== Education Start ====== -->
+  <section id="edukasi" class="ud-about">
+    <div class="container">
+      <div class="ud-about-wrapper wow fadeInUp" data-wow-delay=".2s">
+        <div class="ud-about-content-wrapper">
+          <div class="ud-about-content">
+            <span class="tag">Edukasi</span>
+            <h2>Apa itu Covid - 19?</h2>
+            <p>
+              Infeksi virus Corona yang disebut COVID-19 (Corona Virus Disease
+              2019) pertama kali ditemukan di kota Wuhan, China pada akhir
+              Desember 2019. Virus ini menular dengan sangat cepat dan
+              menyebar ke hampir semua negara, termasuk Indonesia, hanya dalam
+              waktu beberapa bulan.
+            </p>
+
+            <p>
+              Coronavirus adalah kumpulan virus yang menginfeksi sistem
+              pernapasan. Pada banyak kasus, virus ini hanya menyebabkan
+              infeksi pernapasan ringan, seperti flu. Namun, virus ini juga
+              bisa menyebabkan infeksi pernapasan berat, seperti infeksi
+              paru-paru (pneumonia).
+            </p>
+            <a href="https://www.alodokter.com/virus-corona" class="ud-main-btn">Learn More</a>
+          </div>
+        </div>
+        <div class="ud-about-image">
+          <img class="py-3 px-3" src="assets/images/about/wash-hands.svg" alt="about-image" />
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== Education End ====== -->
+
+  <!-- ====== Education Start ====== -->
+  <section id="edukasi" class="ud-about">
+    <div class="container">
+      <div class="ud-about-wrapper wow fadeInUp" data-wow-delay=".2s">
+        <div class="ud-about-content-wrapper">
+          <div class="ud-about-content">
+            <span class="tag">Edukasi</span>
+            <h2>Gejala Covid - 19?</h2>
+            <p>
+              Gejala umum berupa demam ≥ 38°C, batuk kering, dan sesak napas.
+              Jika ada orang yang dalam 14 hari sebelum muncul gejala tersebut
+              pernah melakukan perjalanan ke negara terjangkit, atau pernah
+              merawat/kontak erat dengan penderita COVID-19, maka terhadap
+              orang tersebut akan dilakukan pemeriksaan laboratorium lebih
+              lanjut untuk memastikan diagnosisnya.
+            </p>
+
+            <a href="https://www.halodoc.com/kesehatan/coronavirus" class="ud-main-btn">Learn More</a>
+          </div>
+        </div>
+        <div class="ud-about-image">
+          <img class="mt-5" src="assets/images/about/medical-care.svg" alt="about-image" />
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== Education End ====== -->
+
+  <!-- ====== Features Start ====== -->
+  <section id="features" class="ud-features">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="ud-section-title">
+            <span>Features</span>
+            <h2>Fitur Utama dari Jaga-RT</h2>
+            <p>
+              Kami menyediakan berbagai macam fitur yang akan memudahkan
+              masyarakat.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-3 col-lg-3 col-sm-6">
+          <div class="ud-single-feature wow fadeInUp" data-wow-delay=".1s">
+            <div class="ud-feature-icon">
+              <i class="lni lni-graph"></i>
+            </div>
+            <div class="ud-feature-content">
+              <h3 class="ud-feature-title">Pantau Kasus Positif</h3>
+              <p class="ud-feature-desc">
+                Lorem Ipsum is simply dummy text of the printing and industry.
+              </p>
+              <a href="javascript:void(0)" class="ud-feature-link">
+                Learn More
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-sm-6">
+          <div class="ud-single-feature wow fadeInUp" data-wow-delay=".15s">
+            <div class="ud-feature-icon">
+              <i class="lni lni-sthethoscope"></i>
+            </div>
+            <div class="ud-feature-content">
+              <h3 class="ud-feature-title">Edukasi</h3>
+              <p class="ud-feature-desc">
+                Lorem Ipsum is simply dummy text of the printing and industry.
+              </p>
+              <a href="javascript:void(0)" class="ud-feature-link">
+                Learn More
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-sm-6">
+          <div class="ud-single-feature wow fadeInUp" data-wow-delay=".2s">
+            <div class="ud-feature-icon">
+              <i class="lni lni-notepad"></i>
+            </div>
+            <div class="ud-feature-content">
+              <h3 class="ud-feature-title">Pencatatan Kasus</h3>
+              <p class="ud-feature-desc">
+                Lorem Ipsum is simply dummy text of the printing and industry.
+              </p>
+              <a href="javascript:void(0)" class="ud-feature-link">
+                Learn More
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-sm-6">
+          <div class="ud-single-feature wow fadeInUp" data-wow-delay=".25s">
+            <div class="ud-feature-icon">
+              <i class="lni lni-pencil-alt"></i>
+            </div>
+            <div class="ud-feature-content">
+              <h3 class="ud-feature-title">Pelaporan Kasus</h3>
+              <p class="ud-feature-desc">
+                Lorem Ipsum is simply dummy text of the printing and industry.
+              </p>
+              <a href="javascript:void(0)" class="ud-feature-link">
+                Learn More
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== Features End ====== -->
+
+  <!-- ====== FAQ Start ====== -->
+  <section id="faq" class="ud-faq">
+    <div class="shape">
+      <img src="assets/images/faq/shape.svg" alt="shape" />
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="ud-section-title text-center mx-auto">
+            <span>FAQ</span>
+            <h2>Masih Bingung?</h2>
+            <p>
+              Berikut berbagai pertanyaan yang sering ditanyakan kepada kami.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="ud-single-faq wow fadeInUp" data-wow-delay=".1s">
+            <div class="accordion">
+              <button class="ud-faq-btn collapsed" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                <span class="icon flex-shrink-0">
+                  <i class="lni lni-chevron-down"></i>
+                </span>
+                <span>Apa itu Jaga-RT?</span>
+              </button>
+              <div id="collapseOne" class="accordion-collapse collapse">
+                <div class="ud-faq-body">
+                  Jaga-RT adalah sebuah platform open source yang dibuat
+                  dengan harapan nantinya platform ini akan memudahkan
+                  masyarakat dalam lingkup RT untuk melaporkan dan monitoring
+                  kasus positif Covid-19.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ud-single-faq wow fadeInUp" data-wow-delay=".15s">
+            <div class="accordion">
+              <button class="ud-faq-btn collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                <span class="icon flex-shrink-0">
+                  <i class="lni lni-chevron-down"></i>
+                </span>
+                <span>Bagaimana cara menggunakannya?</span>
+              </button>
+              <div id="collapseTwo" class="accordion-collapse collapse">
+                <div class="ud-faq-body">
+                  Bapak/Ibu RT harus membuat akun terlebih dahulu, yang
+                  nantinya akan mendapatkan <b>tokenRT</b> pada halaman
+                  dashboard setelah melakukan login pada akun. <br />
+                  <br />
+                  Setelahnya, barulah para masyarakat dalam lingkup RT bisa
+                  membuat akun perkeluarga menggunakan <b>tokenRT</b> yang
+                  diberikan oleh Bapak/Ibu RT, agar nantinya bisa melakukan
+                  monitoring berdasarkan RT.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ud-single-faq wow fadeInUp" data-wow-delay=".2s">
+            <div class="accordion">
+              <button class="ud-faq-btn collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                <span class="icon flex-shrink-0">
+                  <i class="lni lni-chevron-down"></i>
+                </span>
+                <span>Apa fitur yang disediakan?</span>
+              </button>
+              <div id="collapseThree" class="accordion-collapse collapse">
+                <div class="ud-faq-body">
+                  Kami menyediakan berbagai macam fitur, seperti monitoring
+                  kasus positif dan pelaporan kasus positif Covid-19 kepada
+                  RT.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="ud-single-faq wow fadeInUp" data-wow-delay=".1s">
+            <div class="accordion">
+              <button class="ud-faq-btn collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                <span class="icon flex-shrink-0">
+                  <i class="lni lni-chevron-down"></i>
+                </span>
+                <span>Apakah Jaga-RT terafiliasi dengan pemerintah?</span>
+              </button>
+              <div id="collapseFour" class="accordion-collapse collapse">
+                <div class="ud-faq-body">
+                  Tidak, platform ini bersifat open source dan tidak
+                  terafiliasi dengan pemerintah.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ud-single-faq wow fadeInUp" data-wow-delay=".15s">
+            <div class="accordion">
+              <button class="ud-faq-btn collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                <span class="icon flex-shrink-0">
+                  <i class="lni lni-chevron-down"></i>
+                </span>
+                <span>Apakah keamanan pada platform ini terjamin?</span>
+              </button>
+              <div id="collapseFive" class="accordion-collapse collapse">
+                <div class="ud-faq-body">
+                  Kami menjamin kemanan data anda, dan kami hanya menggunakan
+                  data pengguna untuk keperluan fitur yang ada.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ud-single-faq wow fadeInUp" data-wow-delay=".2s">
+            <div class="accordion">
+              <button class="ud-faq-btn collapsed" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                <span class="icon flex-shrink-0">
+                  <i class="lni lni-chevron-down"></i>
+                </span>
+                <span>Apakah Platform ini Berbayar?</span>
+              </button>
+              <div id="collapseSix" class="accordion-collapse collapse">
+                <div class="ud-faq-body">
+                  Tidak, Platform ini 100% gratis.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== FAQ End ====== -->
+
+  <!-- ====== Testimonials Start ====== -->
+  <section id="testimonials" class="ud-testimonials">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="ud-section-title mx-auto text-center">
+            <span>Testimonials</span>
+            <h2>Jaga-RT Menurut Mereka</h2>
+            <p>
+              Berikut adalah beberapa testimoni yang diberikan oleh pengguna
+              Jaga-RT.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-4 col-md-6">
+          <div class="ud-single-testimonial wow fadeInUp" data-wow-delay=".1s">
+            <div class="ud-testimonial-ratings">
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+            </div>
+            <div class="ud-testimonial-content">
+              <p>
+                “Jaga-RT sangat membantu saya ketika sedang terkena virus
+                Covid-19, saya jadi lebih mudah meminta bantuan kepada
+                masyarakat sekitar.
+              </p>
+            </div>
+            <div class="ud-testimonial-info">
+              <div class="ud-testimonial-image">
+                <img src="assets/images/testimonials/author-01.png" alt="author" />
+              </div>
+              <div class="ud-testimonial-meta">
+                <h4>Hafezd</h4>
+                <p>Warga Kampung Nangka</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="ud-single-testimonial wow fadeInUp" data-wow-delay=".15s">
+            <div class="ud-testimonial-ratings">
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+            </div>
+            <div class="ud-testimonial-content">
+              <p>
+                “Dengan adanya platform ini, saya jadi bisa dengan mudah
+                memantau dan mengkondisikan situasi Covid-19 dalam lingkup RT
+                saya.
+              </p>
+            </div>
+            <div class="ud-testimonial-info">
+              <div class="ud-testimonial-image">
+                <img src="assets/images/testimonials/author-02.png" alt="author" />
+              </div>
+              <div class="ud-testimonial-meta">
+                <h4>El</h4>
+                <p>Ketua RT</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="ud-single-testimonial wow fadeInUp" data-wow-delay=".2s">
+            <div class="ud-testimonial-ratings">
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+              <i class="lni lni-star-filled"></i>
+            </div>
+            <div class="ud-testimonial-content">
+              <p>
+                “Platform ini sangat bagus untuk digunakan oleh masyarakat
+                luas. Harapan saya semoga dapat dikembangkan lagi fiturnya.
+              </p>
+            </div>
+            <div class="ud-testimonial-info">
+              <div class="ud-testimonial-image">
+                <img src="assets/images/testimonials/author-03.png" alt="author" />
+              </div>
+              <div class="ud-testimonial-meta">
+                <h4>Daffa</h4>
+                <p>Ketua Karang Taruna</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== Testimonials End ====== -->
+
+  <!-- ====== Footer Start ====== -->
+  <footer id="footer" class="ud-footer wow fadeInUp" data-wow-delay=".15s">
+    <div class="shape shape-1">
+      <img src="assets/images/footer/shape-1.svg" alt="shape" />
+    </div>
+    <div class="shape shape-2">
+      <img src="assets/images/footer/shape-2.svg" alt="shape" />
+    </div>
+    <div class="shape shape-3">
+      <img src="assets/images/footer/shape-3.svg" alt="shape" />
+    </div>
+    <div class="ud-footer-widgets">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="ud-widget">
+              <a href="/" class="ud-footer-logo">
+                <img src="assets/images/logo/jaga-rt.png" alt="logo" />
+              </a>
+              <p class="ud-widget-desc">
+                We create digital application that helps people to monitor
+                Covid-19.
+              </p>
+              <ul class="ud-widget-socials">
+                <li>
+                  <a href="#">
+                    <i class="lni lni-facebook-filled"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="lni lni-twitter-filled"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="lni lni-instagram-filled"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="lni lni-linkedin-original"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6">
+            <div class="ud-widget">
+              <h5 class="ud-widget-title">About Us</h5>
+              <ul class="ud-widget-links">
+                <li>
+                  <a href="javascript:void(0)">Home</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0)">Features</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0)">About</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0)">Testimonial</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-3 col-md-6 col-sm-6">
+            <div class="ud-widget">
+              <h5 class="ud-widget-title">Features</h5>
+              <ul class="ud-widget-links">
+                <li>
+                  <a href="javascript:void(0)">How it works</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0)">Privacy policy</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0)">Terms of service</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0)">Refund policy</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ud-footer-bottom">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <ul class="ud-footer-bottom-left">
+              <li>
+                <a href="javascript:void(0)">Privacy policy</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)">Support policy</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)">Terms of service</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <p class="ud-footer-bottom-right">
+              Designed and Developed by
+              <a href="https://linkedin.com/in/hafezdeldaffa" rel="nofollow">Hafezd El Daffa</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- ====== Footer End ====== -->
+
+  <!-- ====== Back To Top Start ====== -->
+  <a href="javascript:void(0)" class="back-to-top">
+    <i class="lni lni-chevron-up"> </i>
+  </a>
+  <!-- ====== Back To Top End ====== -->
+
+  <!-- ====== All Javascript Files ====== -->
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/wow.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    // ==== for menu scroll
+    const pageLink = document.querySelectorAll('.ud-menu-scroll');
+
+    pageLink.forEach((elem) => {
+      elem.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector(elem.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth',
+          offsetTop: 1 - 60,
+        });
+      });
+    });
+
+    // section menu active
+    function onScroll(event) {
+      const sections = document.querySelectorAll('.ud-menu-scroll');
+      const scrollPos =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+
+      for (let i = 0; i < sections.length; i++) {
+        const currLink = sections[i];
+        const val = currLink.getAttribute('href');
+        const refElement = document.querySelector(val);
+        const scrollTopMinus = scrollPos + 73;
+        if (
+          refElement.offsetTop <= scrollTopMinus &&
+          refElement.offsetTop + refElement.offsetHeight > scrollTopMinus
+        ) {
+          document
+            .querySelector('.ud-menu-scroll')
+            .classList.remove('active');
+          currLink.classList.add('active');
+        } else {
+          currLink.classList.remove('active');
+        }
+      }
+    }
+
+    window.document.addEventListener('scroll', onScroll);
+  </script>
+</body>
+
+</html>
