@@ -1,14 +1,14 @@
-const { validationResult } = require("express-validator");
-require("dotenv").config();
-const bcrypt = require("bcrypt");
-const Keluarga = require("../models/keluarga");
-const { errorHandling } = require("./errorHandling");
+const { validationResult } = require('express-validator');
+require('dotenv').config();
+const bcrypt = require('bcrypt');
+const Keluarga = require('../models/keluarga');
+const { errorHandling } = require('./errorHandling');
 
 exports.signUp = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error("Validation failed");
+      const error = new Error('Validation failed');
       error.statusCode = 422;
       error.data = errors.array();
       throw error;
@@ -29,7 +29,7 @@ exports.signUp = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 14);
 
-    if (role === "Keluarga" && tokenRT) {
+    if (role === 'Keluarga' && tokenRT) {
       const keluarga = new Keluarga({
         namaKepalaKeluarga: namaKepalaKeluarga,
         email: email,
@@ -48,7 +48,7 @@ exports.signUp = async (req, res, next) => {
 
       req.keluarga = await Keluarga.findOne({ email: keluarga.email });
 
-      res.status(201).redirect("/login");
+      res.status(201).redirect('/login');
     } else {
       const dataRt = new Keluarga({
         namaKepalaKeluarga: namaKepalaKeluarga,
@@ -67,7 +67,7 @@ exports.signUp = async (req, res, next) => {
 
       req.keluarga = await Keluarga.findOne({ email: dataRt.email });
 
-      res.status(201).redirect("/login");
+      res.status(201).redirect('/login');
     }
   } catch (error) {
     errorHandling(error);
@@ -80,11 +80,11 @@ exports.login = async (req, res, next) => {
   let user;
 
   try {
-    if (role === "Keluarga") {
-      const keluarga = await Keluarga.findOne({ email: email });
+    if (role === 'Keluarga') {
+      const keluarga = await Keluarga.findOne({ email: email, role: role });
 
       if (!keluarga) {
-        const error = new Error("Wrong data. Please check your login data!");
+        const error = new Error('Wrong data. Please check your login data!');
         error.statusCode = 401;
         throw error;
       }
@@ -93,7 +93,7 @@ exports.login = async (req, res, next) => {
       const truePassword = await bcrypt.compare(password, user.password);
 
       if (!truePassword) {
-        const error = new Error("Wrong password.");
+        const error = new Error('Wrong password.');
         error.statusCode = 401;
         throw error;
       }
@@ -103,14 +103,14 @@ exports.login = async (req, res, next) => {
         req.session.user = user;
         return req.session.save((err) => {
           console.log(err);
-          res.redirect("/dashboard");
+          res.redirect('/dashboard');
         });
       }
-    } else if (role === "RT") {
-      const rt = await Keluarga.findOne({ email: email });
+    } else if (role === 'RT') {
+      const rt = await Keluarga.findOne({ email: email, role: role });
 
       if (!rt) {
-        const error = new Error("Wrong data. Please check your login data!");
+        const error = new Error('Wrong data. Please check your login data!');
         error.statusCode = 401;
         throw error;
       }
@@ -120,7 +120,7 @@ exports.login = async (req, res, next) => {
       const truePassword = await bcrypt.compare(password, user.password);
 
       if (!truePassword) {
-        const error = new Error("Wrong password.");
+        const error = new Error('Wrong password.');
         error.statusCode = 401;
         throw error;
       }
@@ -130,7 +130,7 @@ exports.login = async (req, res, next) => {
         req.session.user = user;
         return req.session.save((err) => {
           console.log(err);
-          res.redirect("/dashboard");
+          res.redirect('/dashboard');
         });
       }
     }
@@ -143,13 +143,13 @@ exports.login = async (req, res, next) => {
 exports.logout = async (req, res, next) => {
   req.session.destroy((err) => {
     console.log(err);
-    res.redirect("/");
+    res.redirect('/');
   });
 };
 
 exports.isAuth = async (req, res, next) => {
   if (!req.session.isLoggedIn) {
-    return res.redirect("/login");
+    return res.redirect('/login');
   }
   next();
 };
